@@ -1,24 +1,28 @@
-import { useState } from "react";
+import CurrentValue from "./components/CurrentValue";
+import Generators from "./components/Generators";
+import Upgrades from "./components/Upgrades";
+import Clicker from "./components/Clicker";
+import useGameLoop from "./hooks/useGameLoop";
+import ValuePerSecond from "./components/ValuePerSecond";
+import useBackgroundGeneration from "./hooks/useBackgroundGeneration";
+import useDebugCheats from "./hooks/useDebugCheats";
 
-function App() {
-  const [count, setCount] = useState(0);
+export default function App() {
+  useGameLoop();
+  useBackgroundGeneration();
+  useDebugCheats();
 
   return (
-    <>
-      <h1>Vite + React</h1>
+    <div className="max-w-lg mx-auto px-2 mt-4">
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+        <CurrentValue />
+        <ValuePerSecond />
+        <Clicker />
+        <div className="grid grid-cols-2 gap-2 mt-2">
+          <Generators />
+          <Upgrades />
+        </div>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </div>
   );
 }
-
-export default App;
