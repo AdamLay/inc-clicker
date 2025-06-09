@@ -56,7 +56,7 @@ export default function GeneratorListItem({ name }: { name: string }) {
     >
       <div className="flex-1">
         <p>
-          {name} {upgradeCount > 0 && <span>(lvl {upgradeCount})</span>} | {formatNumber(vps)}/s
+          {name} {upgradeCount > 0 && <span>(lvl {upgradeCount})</span>}
         </p>
         <p className="text-xs opacity-75">
           {formatNumber(upgradeCost)} - {formatNumber(baseVps)}/s -{" "}
@@ -65,7 +65,12 @@ export default function GeneratorListItem({ name }: { name: string }) {
         </p>
         <p className="text-xs opacity-75"></p>
       </div>
-      <div className="text-2xl font-bold">{generator?.level}</div>
+      {(generator?.level ?? 0) > 0 && (
+        <>
+          <p>{formatNumber(vps)}/s</p>
+          <div className="text-2xl font-bold">{generator?.level}</div>
+        </>
+      )}
     </li>
   );
 }
