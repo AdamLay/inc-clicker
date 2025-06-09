@@ -16,8 +16,11 @@ export default function Clicker() {
   };
 
   return (
-    <button className="btn py-8" onClick={handleClick}>
-      Increment! <span className="text-xs">({clickValue})</span>
+    <button className="btn py-8 " onClick={handleClick}>
+      <p className="flex items-center gap-2">
+        <span className="text-lg">Increment +{clickValue}</span>
+        <span className="text-xs">(lvl {boughtUpgrades.length})</span>
+      </p>
     </button>
   );
 }
