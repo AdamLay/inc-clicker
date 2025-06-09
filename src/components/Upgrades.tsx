@@ -12,7 +12,6 @@ export default function Upgrades() {
 
   return (
     <div>
-      <h1 className="text-sm font-bold text-center">Upgrades</h1>
       <ul className="list bg-base-100 rounded-box shadow-md">
         {orderBy(available, "cost").map((upgrade) => (
           <UpgradeListItem key={upgrade.name} name={upgrade.name} />

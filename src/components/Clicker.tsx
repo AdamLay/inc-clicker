@@ -16,7 +16,7 @@ export default function Clicker() {
   };
 
   return (
-    <button className="btn" onClick={handleClick}>
+    <button className="btn py-8" onClick={handleClick}>
       Increment! <span className="text-xs">({clickValue})</span>
     </button>
   );
