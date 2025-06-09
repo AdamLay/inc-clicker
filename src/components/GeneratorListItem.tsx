@@ -4,6 +4,7 @@ import { selectValuePerSecond, useStore } from "../store/store";
 import { cn, formatDuration, formatNumber, getGeneratorUpgradeCostBulk } from "../util";
 import { useMemo } from "react";
 import useStats from "../hooks/useStats";
+import { upgrades } from "../data/upgrades";
 
 export default function GeneratorListItem({ name }: { name: string }) {
   const [count, myUpgrades, addGenerator, myGenerators, buyCount] = useStore(
@@ -35,6 +36,12 @@ export default function GeneratorListItem({ name }: { name: string }) {
     [myUpgrades, definition, generator]
   );
   const baseVps = useMemo(() => getGeneratorVps(name, 1), [myUpgrades, definition]);
+  const upgradeCount = useMemo(
+    () =>
+      upgrades.filter((x) => x.parameter === name).filter((x) => myUpgrades.includes(x.name))
+        .length,
+    [myUpgrades]
+  );
 
   const buyEnabled = count >= upgradeCost;
   const secondsUntilBuy = Math.max(0, (upgradeCost - count) / currentVps);
@@ -49,7 +56,7 @@ export default function GeneratorListItem({ name }: { name: string }) {
     >
       <div className="flex-1">
         <p>
-          {name} | {formatNumber(vps)}/s
+          {name} {upgradeCount > 0 && <span>(lvl {upgradeCount})</span>} | {formatNumber(vps)}/s
         </p>
         <p className="text-xs opacity-75">
           {formatNumber(upgradeCost)} - {formatNumber(baseVps)}/s -{" "}
