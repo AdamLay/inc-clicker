@@ -5,9 +5,7 @@ import { upgrades, UpgradeType } from "../data/upgrades";
 import { generators } from "../data/generators";
 
 export default function useStats() {
-  const [myUpgrades, myGenerators] = useStore(
-    useShallow((state) => [state.upgrades, state.generators])
-  );
+  const [myUpgrades] = useStore(useShallow((state) => [state.upgrades]));
 
   const getGeneratorVps = useCallback(
     (generatorName: string, level: number, withUpgrades?: string[]) => {

@@ -6,7 +6,7 @@ import useGameLoop from "./hooks/useGameLoop";
 import ValuePerSecond from "./components/ValuePerSecond";
 import useBackgroundGeneration from "./hooks/useBackgroundGeneration";
 import useDebugCheats from "./hooks/useDebugCheats";
-import { UpdateNotification, OfflineNotification } from "./registerSW";
+import { OfflineNotification } from "./registerSW";
 
 export default function App() {
   useGameLoop();
@@ -24,7 +24,6 @@ export default function App() {
           <Upgrades />
         </div>
       </div>
-      <UpdateNotification />
       <OfflineNotification />
     </div>
   );
