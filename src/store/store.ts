@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import { generators, type GeneratorState } from "../data/generators";
 import { upgrades, UpgradeType } from "../data/upgrades";
 
@@ -41,31 +42,45 @@ export const selectValuePerSecond = (state: {
   return globalUpgrades.reduce((acc, next) => acc * next.multiplier, valuePerSecond);
 };
 
-export const useStore = create<State>()((set) => ({
-  count: STARTING_COUNT,
-  countTotal: STARTING_COUNT,
-  increase: (by) =>
-    set((state) => ({ count: state.count + by, countTotal: state.countTotal + by })),
-  generators: [],
-  addGenerator: (generatorName: string, cost: number, count: number = 1) =>
-    set((state) => {
-      const exists = state.generators.some((g) => g.name === generatorName);
-      return {
-        count: state.count - cost,
-        generators: exists
-          ? state.generators.map((g) =>
-              g.name === generatorName ? { ...g, level: g.level + count } : g
-            )
-          : [...state.generators, { name: generatorName, level: count }],
-      };
+export const useStore = create<State>()(
+  persist(
+    (set) => ({
+      count: STARTING_COUNT,
+      countTotal: STARTING_COUNT,
+      increase: (by) =>
+        set((state) => ({ count: state.count + by, countTotal: state.countTotal + by })),
+      generators: [],
+      addGenerator: (generatorName: string, cost: number, count: number = 1) =>
+        set((state) => {
+          const exists = state.generators.some((g) => g.name === generatorName);
+          return {
+            count: state.count - cost,
+            generators: exists
+              ? state.generators.map((g) =>
+                  g.name === generatorName ? { ...g, level: g.level + count } : g
+                )
+              : [...state.generators, { name: generatorName, level: count }],
+          };
+        }),
+      upgrades: [],
+      addUpgrade: (name: string, cost: number) =>
+        set((state) => ({
+          count: state.count - cost,
+          upgrades: [...state.upgrades, name],
+        })),
+      buyCount: 1,
+      setBuyCount: (amt: number) => set(() => ({ buyCount: amt })),
+      setCount_Debug: (amt: number) => set(() => ({ count: amt })),
     }),
-  upgrades: [],
-  addUpgrade: (name: string, cost: number) =>
-    set((state) => ({
-      count: state.count - cost,
-      upgrades: [...state.upgrades, name],
-    })),
-  buyCount: 1,
-  setBuyCount: (amt: number) => set(() => ({ buyCount: amt })),
-  setCount_Debug: (amt: number) => set(() => ({ count: amt })),
-}));
+    {
+      name: 'inc-clicker-storage', // unique name for localStorage key
+      partialize: (state) => ({
+        count: state.count,
+        countTotal: state.countTotal,
+        generators: state.generators,
+        upgrades: state.upgrades,
+        buyCount: state.buyCount
+      }),
+    }
+  )
+);
