@@ -13,6 +13,7 @@ import HelpDialog from "./components/HelpDialog";
 import Menu from "./components/Menu";
 import ResetConfirmationModal from "./components/ResetConfirmationModal";
 import ClicksValuePerSecond from "./components/ClicksValuePerSecond";
+import RandomEventButton from "./components/RandomEventButton";
 
 export default function App() {
   const [tab, setTab] = useState(0);
@@ -34,6 +35,7 @@ export default function App() {
                 <ClicksValuePerSecond />
               </div>
               <Clicker />
+              <RandomEventButton />
               <div role="tablist" className="tabs tabs-lift mt-2 md:hidden">
                 <a
                   role="tab"

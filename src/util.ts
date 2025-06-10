@@ -19,7 +19,7 @@ export function formatNumber(num: number): string {
   } else if (num >= 1e3) {
     return Number(num.toFixed(0)).toLocaleString();
   }
-  return num.toFixed(1);
+  return num?.toFixed(1) ?? "0";
 }
 
 export function getGeneratorUpgradeCost(

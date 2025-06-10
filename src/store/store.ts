@@ -4,6 +4,7 @@ import { generators, type GeneratorState } from "../data/generators";
 import { upgrades, UpgradeType } from "../data/upgrades";
 
 export type ClickEvent = { value: number; when: number };
+export type BonusEvent = { multiplier: number; duration: number; when: number };
 
 interface State {
   count: number;
@@ -25,6 +26,8 @@ interface State {
   clicks: number;
   clickEvents: ClickEvent[];
   addClickEvent: (evt: ClickEvent) => void;
+  bonusEvent: BonusEvent | null;
+  setBonusEvent: (evt: BonusEvent | null) => void;
 
   setCount_Debug: (amt: number) => void;
 }
@@ -35,6 +38,7 @@ export const selectValuePerSecond = (state: {
   upgrades: string[];
   generators: GeneratorState[];
   backgroundMode: Date | null;
+  bonusEvent?: BonusEvent | null;
 }) => {
   const generatorUpgrades = upgrades.filter(
     (x) => state.upgrades.includes(x.name) && x.type === UpgradeType.Generator
@@ -52,7 +56,9 @@ export const selectValuePerSecond = (state: {
     valuePerSecond += genVps;
   }
 
-  const totalVps = globalUpgrades.reduce((acc, next) => acc * next.multiplier, valuePerSecond);
+  const totalVps =
+    globalUpgrades.reduce((acc, next) => acc * next.multiplier, valuePerSecond) *
+    (state.bonusEvent?.multiplier ?? 1);
 
   if (!state.backgroundMode) return totalVps;
 
@@ -115,6 +121,8 @@ export const useStore = create<State>()(
             evt,
           ],
         })),
+      bonusEvent: null,
+      setBonusEvent: (evt: BonusEvent | null) => set(() => ({ bonusEvent: evt })),
       setCount_Debug: (amt: number) => set(() => ({ count: amt, countTotal: amt })),
     }),
     {
