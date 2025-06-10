@@ -48,6 +48,8 @@ export default function GeneratorListItem({ name }: { name: string }) {
     [myUpgrades]
   );
 
+  const vpsPercent = (vps / currentVps) * 100;
+
   const buyEnabled = count >= upgradeCost;
   const secondsUntilBuy = Math.max(0, (upgradeCost - count) / currentVps);
 
@@ -76,6 +78,7 @@ export default function GeneratorListItem({ name }: { name: string }) {
       {(generator?.level ?? 0) > 0 && (
         <>
           <p>{formatNumber(vps)}/s</p>
+          <p className="text-xs opacity-75">{vpsPercent.toFixed(1)}%</p>
           <div className="text-2xl font-bold">{generator?.level}</div>
         </>
       )}
