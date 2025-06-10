@@ -54,7 +54,7 @@ const upgradeSet = (
 
 export const upgrades: Upgrade[] = [
   ...upgradeSet("Click Power", 50, (i) => (i + 1) * 1.66, UpgradeType.Clicker),
-  ...upgradeSet("Global 2%", 200, 1.02, UpgradeType.Global),
+  ...upgradeSet("Global 2%", 80, 1.02, UpgradeType.Global),
   ...upgradeSet("Starter", 20, (i) => [2, 3, 2, 3][i] ?? 2, UpgradeType.Generator, "Starter", 8),
   ...upgradeSet(
     "Constructor",
