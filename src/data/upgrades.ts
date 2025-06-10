@@ -55,8 +55,15 @@ const upgradeSet = (
 export const upgrades: Upgrade[] = [
   ...upgradeSet("Click Power", 50, (i) => (i + 1) * 1.5, UpgradeType.Clicker),
   ...upgradeSet("Global 2%", 200, 1.02, UpgradeType.Global),
-  ...upgradeSet("Starter", 20, 2, UpgradeType.Generator, "Starter", 8),
-  ...upgradeSet("Constructor", 300, 2, UpgradeType.Generator, "Constructor", 9),
+  ...upgradeSet("Starter", 20, (i) => [2, 4, 2, 6][i] ?? 2, UpgradeType.Generator, "Starter", 8),
+  ...upgradeSet(
+    "Constructor",
+    300,
+    (i) => [1.5, 2, 5, 3][i] ?? 2,
+    UpgradeType.Generator,
+    "Constructor",
+    9
+  ),
   ...upgradeSet("Assembler", 4e3, 2, UpgradeType.Generator, "Assembler", 10),
   ...upgradeSet("Manufacturer", 5e4, 2, UpgradeType.Generator, "Manufacturer", 11),
   ...upgradeSet("Atomiser", 5e5, 2, UpgradeType.Generator, "Atomiser", 12),
@@ -67,3 +74,5 @@ export const upgrades: Upgrade[] = [
   ...upgradeSet("Black Hole Device", 5e10, 2, UpgradeType.Generator, "Black Hole Device", 17),
   ...upgradeSet("Cosmic Forge", 5e11, 2, UpgradeType.Generator, "Cosmic Forge", 18),
 ];
+
+(window as any).upgrades = upgrades; // For debugging in console

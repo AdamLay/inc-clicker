@@ -56,7 +56,7 @@ export default function UpgradeListItem({ name }: { name: string }) {
       return "Increases all generators' output.";
     }
     if (definition.type === UpgradeType.Generator) {
-      return `Doubles output of ${definition.parameter}.`;
+      return `Increase ${definition.parameter} output by ${definition.multiplier}x`;
     }
   })();
 
