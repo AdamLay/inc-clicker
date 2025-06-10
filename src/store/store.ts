@@ -18,6 +18,8 @@ interface State {
   resetConfirmOpen: boolean;
   setResetConfirmOpen: (open: boolean) => void;
   resetGame: () => void;
+  backgroundMode: boolean;
+  setBackgroundMode: (bgm: boolean) => void;
 
   setCount_Debug: (amt: number) => void;
 }
@@ -27,6 +29,7 @@ const STARTING_COUNT = 0;
 export const selectValuePerSecond = (state: {
   upgrades: string[];
   generators: GeneratorState[];
+  backgroundMode: boolean;
 }) => {
   const generatorUpgrades = upgrades.filter(
     (x) => state.upgrades.includes(x.name) && x.type === UpgradeType.Generator
@@ -44,7 +47,10 @@ export const selectValuePerSecond = (state: {
     valuePerSecond += genVps;
   }
 
-  return globalUpgrades.reduce((acc, next) => acc * next.multiplier, valuePerSecond);
+  return (
+    globalUpgrades.reduce((acc, next) => acc * next.multiplier, valuePerSecond) *
+    (state.backgroundMode ? 0.2 : 1)
+  );
 };
 
 export const useStore = create<State>()(
@@ -75,6 +81,8 @@ export const useStore = create<State>()(
         })),
       buyCount: 1,
       setBuyCount: (amt: number) => set(() => ({ buyCount: amt })),
+      backgroundMode: false,
+      setBackgroundMode: (bgm: boolean) => set(() => ({ backgroundMode: bgm })),
       helpOpen: false,
       setHelpOpen: (open: boolean) => set(() => ({ helpOpen: open })),
       resetConfirmOpen: false,

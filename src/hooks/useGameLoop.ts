@@ -8,8 +8,6 @@ export default function useGameLoop() {
   const lastUpdate = useRef(new Date().getTime());
 
   useEffect(() => {
-    console.log("Value per second:", valuePerSecond);
-
     const incLoop = setInterval(() => {
       const deltaTime = new Date().getTime() - lastUpdate.current;
 
