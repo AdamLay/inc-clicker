@@ -4,8 +4,8 @@ import { upgrades, UpgradeType } from "../data/upgrades";
 import { formatNumber } from "../util";
 
 export default function Clicker() {
-  const [increment, myUpgrades, incClicks] = useStore(
-    useShallow((state) => [state.increase, state.upgrades, state.incClicks])
+  const [increment, myUpgrades, addClickEvent] = useStore(
+    useShallow((state) => [state.increase, state.upgrades, state.addClickEvent])
   );
 
   const boughtUpgrades = upgrades.filter(
@@ -16,7 +16,7 @@ export default function Clicker() {
 
   const handleClick = () => {
     increment(clickValue);
-    incClicks();
+    addClickEvent({ value: clickValue, when: new Date().getTime() });
   };
 
   return (

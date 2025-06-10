@@ -3,6 +3,8 @@ import { persist } from "zustand/middleware";
 import { generators, type GeneratorState } from "../data/generators";
 import { upgrades, UpgradeType } from "../data/upgrades";
 
+export type ClickEvent = { value: number; when: number };
+
 interface State {
   count: number;
   countTotal: number;
@@ -21,7 +23,8 @@ interface State {
   backgroundMode: Date | null;
   setBackgroundMode: (bgm: Date | null) => void;
   clicks: number;
-  incClicks: () => void;
+  clickEvents: ClickEvent[];
+  addClickEvent: (evt: ClickEvent) => void;
 
   setCount_Debug: (amt: number) => void;
 }
@@ -102,7 +105,16 @@ export const useStore = create<State>()(
           resetConfirmOpen: false,
         })),
       clicks: 0,
-      incClicks: () => set((state) => ({ clicks: state.clicks + 1 })),
+      clickEvents: [],
+      addClickEvent: (evt: { value: number; when: number }) =>
+        set((state) => ({
+          clicks: state.clicks + 1,
+          clickEvents: [
+            // Keep clicks from >= 1.5 seconds ago
+            ...state.clickEvents.filter((x) => x.when > new Date().getTime() - 1_500),
+            evt,
+          ],
+        })),
       setCount_Debug: (amt: number) => set(() => ({ count: amt, countTotal: amt })),
     }),
     {

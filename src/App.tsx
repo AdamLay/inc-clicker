@@ -12,6 +12,7 @@ import NavBar from "./components/NavBar";
 import HelpDialog from "./components/HelpDialog";
 import Menu from "./components/Menu";
 import ResetConfirmationModal from "./components/ResetConfirmationModal";
+import ClicksValuePerSecond from "./components/ClicksValuePerSecond";
 
 export default function App() {
   const [tab, setTab] = useState(0);
@@ -28,7 +29,10 @@ export default function App() {
           <div className="max-w-2xl mx-auto px-2">
             <div className="card">
               <CurrentValue />
-              <ValuePerSecond />
+              <div className="grid grid-cols-2 my-2">
+                <ValuePerSecond />
+                <ClicksValuePerSecond />
+              </div>
               <Clicker />
               <div role="tablist" className="tabs tabs-lift mt-2 md:hidden">
                 <a

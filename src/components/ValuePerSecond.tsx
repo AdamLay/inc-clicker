@@ -7,7 +7,7 @@ export default function ValuePerSecond() {
 
   return (
     <div className="text-xl text-center text-gray-700 dark:text-gray-200">
-      {formatNumber(valuePerSecond)}/s
+      <span className="text-sm opacity-75">Generators</span> {formatNumber(valuePerSecond)}/s
     </div>
   );
 }
