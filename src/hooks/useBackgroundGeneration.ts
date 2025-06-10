@@ -9,11 +9,11 @@ export default function useBackgroundGeneration() {
     if (document.visibilityState === "hidden") {
       // The tab is now in the background (inactive)
       console.log("Tab is in the background");
-      setBackgroundMode(true); // Enable background generation
+      setBackgroundMode(new Date()); // Enable background generation
     } else if (document.visibilityState === "visible") {
       // The tab is now active
       console.log("Tab is active");
-      setBackgroundMode(false); // Disable background generation
+      setBackgroundMode(null); // Disable background generation
     }
   };
 
