@@ -59,7 +59,7 @@ export default function GeneratorListItem({ name }: { name: string }) {
           {name} {upgradeCount > 0 && <span>(lvl {upgradeCount})</span>}
         </p>
         <p className="text-xs opacity-75">
-          {formatNumber(upgradeCost)} - {formatNumber(baseVps)}/s -{" "}
+          {formatNumber(upgradeCost)} - {formatNumber(baseVps * buyCount)}/s -{" "}
           {formatDuration(upgradeCost / baseVps)} PP
           {secondsUntilBuy > 0 && <> - {formatDuration(secondsUntilBuy)}</>}
         </p>

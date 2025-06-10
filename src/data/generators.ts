@@ -61,4 +61,18 @@ export const generators: Generator[] = [
     valuePerSecond: 1e5,
     multiplier: 1.17,
   },
+  {
+    name: "Dark Matter Reactor",
+    level: 1,
+    initialCost: 1e8,
+    valuePerSecond: 1e6,
+    multiplier: 1.19,
+  },
+  {
+    name: "Singularity Engine",
+    level: 1,
+    initialCost: 1e9,
+    valuePerSecond: 1e7,
+    multiplier: 1.21,
+  },
 ];

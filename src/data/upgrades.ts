@@ -53,10 +53,15 @@ const upgradeSet = (
 };
 
 export const upgrades: Upgrade[] = [
-  ...upgradeSet("Click Power", 50, (i) => (i + 1) * 2, UpgradeType.Clicker),
+  ...upgradeSet("Click Power", 50, (i) => (i + 1) * 1.5, UpgradeType.Clicker),
   ...upgradeSet("Global 2%", 200, 1.02, UpgradeType.Global),
   ...upgradeSet("Starter", 20, 2, UpgradeType.Generator, "Starter", 8),
   ...upgradeSet("Constructor", 300, 2, UpgradeType.Generator, "Constructor", 9),
   ...upgradeSet("Assembler", 4e3, 2, UpgradeType.Generator, "Assembler", 10),
   ...upgradeSet("Manufacturer", 5e4, 2, UpgradeType.Generator, "Manufacturer", 11),
+  ...upgradeSet("Atomiser", 5e5, 2, UpgradeType.Generator, "Atomiser", 12),
+  ...upgradeSet("Collider", 5e6, 2, UpgradeType.Generator, "Collider", 13),
+  ...upgradeSet("Quantum Generator", 5e7, 2, UpgradeType.Generator, "Quantum Generator", 14),
+  ...upgradeSet("Dark Matter Reactor", 5e8, 2, UpgradeType.Generator, "Dark Matter Reactor", 15),
+  ...upgradeSet("Singularity Engine", 5e9, 2, UpgradeType.Generator, "Singularity Engine", 16),
 ];

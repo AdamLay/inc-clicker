@@ -13,6 +13,11 @@ interface State {
   addUpgrade: (name: string, cost: number) => void;
   buyCount: number;
   setBuyCount: (amt: number) => void;
+  helpOpen: boolean;
+  setHelpOpen: (open: boolean) => void;
+  resetConfirmOpen: boolean;
+  setResetConfirmOpen: (open: boolean) => void;
+  resetGame: () => void;
 
   setCount_Debug: (amt: number) => void;
 }
@@ -70,16 +75,29 @@ export const useStore = create<State>()(
         })),
       buyCount: 1,
       setBuyCount: (amt: number) => set(() => ({ buyCount: amt })),
-      setCount_Debug: (amt: number) => set(() => ({ count: amt })),
+      helpOpen: false,
+      setHelpOpen: (open: boolean) => set(() => ({ helpOpen: open })),
+      resetConfirmOpen: false,
+      setResetConfirmOpen: (open: boolean) => set(() => ({ resetConfirmOpen: open })),
+      resetGame: () =>
+        set(() => ({
+          count: STARTING_COUNT,
+          countTotal: STARTING_COUNT,
+          generators: [],
+          upgrades: [],
+          buyCount: 1,
+          resetConfirmOpen: false,
+        })),
+      setCount_Debug: (amt: number) => set(() => ({ count: amt, countTotal: amt })),
     }),
     {
-      name: 'inc-clicker-storage', // unique name for localStorage key
+      name: "inc-clicker-storage", // unique name for localStorage key
       partialize: (state) => ({
         count: state.count,
         countTotal: state.countTotal,
         generators: state.generators,
         upgrades: state.upgrades,
-        buyCount: state.buyCount
+        buyCount: state.buyCount,
       }),
     }
   )
