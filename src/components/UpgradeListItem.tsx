@@ -15,7 +15,11 @@ export default function UpgradeListItem({ name }: { name: string }) {
       state.generators,
     ])
   );
-  const currentVps = selectValuePerSecond({ upgrades: myUpgrades, generators });
+  const currentVps = selectValuePerSecond({
+    upgrades: myUpgrades,
+    generators,
+    backgroundMode: null,
+  });
   const { getGeneratorVps } = useStats();
   const definition = upgrades.find((g) => g.name === name)!;
   const gen =
@@ -32,7 +36,11 @@ export default function UpgradeListItem({ name }: { name: string }) {
   const pp = (() => {
     if (definition.type === UpgradeType.Clicker) return 0;
     if (definition.type === UpgradeType.Global) {
-      const vps = selectValuePerSecond({ upgrades: [...myUpgrades, name], generators });
+      const vps = selectValuePerSecond({
+        upgrades: [...myUpgrades, name],
+        generators,
+        backgroundMode: null,
+      });
       const diff = vps - currentVps;
       return definition.cost / diff;
     }

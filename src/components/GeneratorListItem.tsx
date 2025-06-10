@@ -7,16 +7,21 @@ import useStats from "../hooks/useStats";
 import { upgrades } from "../data/upgrades";
 
 export default function GeneratorListItem({ name }: { name: string }) {
-  const [count, myUpgrades, addGenerator, myGenerators, buyCount] = useStore(
+  const [count, countTotal, myUpgrades, addGenerator, myGenerators, buyCount] = useStore(
     useShallow((state) => [
       state.count,
+      state.countTotal,
       state.upgrades,
       state.addGenerator,
       state.generators,
       state.buyCount,
     ])
   );
-  const currentVps = selectValuePerSecond({ upgrades: myUpgrades, generators: myGenerators });
+  const currentVps = selectValuePerSecond({
+    upgrades: myUpgrades,
+    generators: myGenerators,
+    backgroundMode: null,
+  });
   const definition = generators.find((g) => g.name === name)!;
   const generator = myGenerators.find((x) => x.name === name);
   const { getGeneratorVps } = useStats();
@@ -46,11 +51,14 @@ export default function GeneratorListItem({ name }: { name: string }) {
   const buyEnabled = count >= upgradeCost;
   const secondsUntilBuy = Math.max(0, (upgradeCost - count) / currentVps);
 
+  if (countTotal < upgradeCost * 0.01) return null;
+
   return (
     <li
       className={cn(
         "list-row flex items-center select-none gap-2",
-        buyEnabled ? "cursor-pointer hover:bg-base-200" : "cursor-not-allowed opacity-50"
+        buyEnabled ? "cursor-pointer hover:bg-base-200" : "cursor-not-allowed opacity-50",
+        countTotal < upgradeCost * 0.1 ? "blur-[2px] opacity-25 backdrop-brightness-50" : null
       )}
       onClick={buyEnabled ? () => addGenerator(name, upgradeCost, buyCount) : undefined}
     >
