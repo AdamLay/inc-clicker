@@ -34,8 +34,10 @@ export default function InstallAppPrompt() {
   if (!showInstallPrompt) return null;
 
   return (
-    <button className="btn btn-ghost" onClick={handleInstallClick}>
-      Install App
-    </button>
+    <li>
+      <button className="btn btn-ghost" onClick={handleInstallClick}>
+        Install App
+      </button>
+    </li>
   );
 }

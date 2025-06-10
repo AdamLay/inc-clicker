@@ -20,6 +20,8 @@ interface State {
   resetGame: () => void;
   backgroundMode: Date | null;
   setBackgroundMode: (bgm: Date | null) => void;
+  clicks: number;
+  incClicks: () => void;
 
   setCount_Debug: (amt: number) => void;
 }
@@ -99,6 +101,8 @@ export const useStore = create<State>()(
           buyCount: 1,
           resetConfirmOpen: false,
         })),
+      clicks: 0,
+      incClicks: () => set((state) => ({ clicks: state.clicks + 1 })),
       setCount_Debug: (amt: number) => set(() => ({ count: amt, countTotal: amt })),
     }),
     {
