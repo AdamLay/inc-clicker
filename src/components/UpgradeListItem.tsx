@@ -48,6 +48,18 @@ export default function UpgradeListItem({ name }: { name: string }) {
     return 0;
   })();
 
+  const helperText = (() => {
+    if (definition.type === UpgradeType.Clicker) {
+      return "Increases click value.";
+    }
+    if (definition.type === UpgradeType.Global) {
+      return "Increases all generators' output.";
+    }
+    if (definition.type === UpgradeType.Generator) {
+      return `Doubles output of ${definition.parameter}.`;
+    }
+  })();
+
   const secondsUntilBuy = Math.max(0, (definition.cost - count) / currentVps);
 
   return (
@@ -60,6 +72,7 @@ export default function UpgradeListItem({ name }: { name: string }) {
     >
       <div className="flex-1">
         <div>{name}</div>
+        <p className="text-xs">{helperText}</p>
         <div className="text-xs font-semibold opacity-60">
           {formatNumber(definition.cost)} - {formatDuration(pp)} PP
           {secondsUntilBuy > 0 && <> - {formatDuration(secondsUntilBuy)}</>}

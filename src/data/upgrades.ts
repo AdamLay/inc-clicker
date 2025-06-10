@@ -64,4 +64,6 @@ export const upgrades: Upgrade[] = [
   ...upgradeSet("Quantum Generator", 5e7, 2, UpgradeType.Generator, "Quantum Generator", 14),
   ...upgradeSet("Dark Matter Reactor", 5e8, 2, UpgradeType.Generator, "Dark Matter Reactor", 15),
   ...upgradeSet("Singularity Engine", 5e9, 2, UpgradeType.Generator, "Singularity Engine", 16),
+  ...upgradeSet("Black Hole Device", 5e10, 2, UpgradeType.Generator, "Black Hole Device", 17),
+  ...upgradeSet("Cosmic Forge", 5e11, 2, UpgradeType.Generator, "Cosmic Forge", 18),
 ];

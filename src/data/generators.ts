@@ -75,4 +75,18 @@ export const generators: Generator[] = [
     valuePerSecond: 1e7,
     multiplier: 1.21,
   },
+  {
+    name: "Black Hole Device",
+    level: 1,
+    initialCost: 1e11,
+    valuePerSecond: 1e8,
+    multiplier: 1.23,
+  },
+  {
+    name: "Cosmic Forge",
+    level: 1,
+    initialCost: 1e13,
+    valuePerSecond: 1e9,
+    multiplier: 1.25,
+  },
 ];
