@@ -14,7 +14,7 @@ import Menu from "./components/Menu";
 import ResetConfirmationModal from "./components/ResetConfirmationModal";
 import ClicksValuePerSecond from "./components/ClicksValuePerSecond";
 import RandomEventButton from "./components/RandomEventButton";
-//import StatsGraphs from "./components/graphs/StatsGraphs";
+import StatsGraphs from "./components/graphs/StatsGraphs";
 
 export default function App() {
   const [tab, setTab] = useState(0);

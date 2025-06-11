@@ -11,7 +11,7 @@ export default function BuyCountSelector() {
       <button
         className={cn(
           "flex-1 btn btn-sm join-item",
-          buyCount === count ? "btn-success" : "btn-outline"
+          buyCount === count ? "btn-primary" : "btn-outline"
         )}
         onClick={() => setBuyCount(count)}
       >

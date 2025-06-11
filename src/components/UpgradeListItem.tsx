@@ -2,10 +2,10 @@ import { useShallow } from "zustand/react/shallow";
 import { selectValuePerSecond, useStore } from "../store/store";
 import { cn, formatDuration, formatNumber } from "../util";
 import { upgrades, UpgradeType } from "../data/upgrades";
-import { Check } from "lucide-react";
+import { ArrowUp, Check } from "lucide-react";
 import useStats from "../hooks/useStats";
 
-export default function UpgradeListItem({ name }: { name: string }) {
+export default function UpgradeListItem({ name, icon }: { name: string; icon?: boolean }) {
   const [count, countTotal, addUpgrade, myUpgrades, generators] = useStore(
     useShallow((state) => [
       state.count,
@@ -78,9 +78,11 @@ export default function UpgradeListItem({ name }: { name: string }) {
       )}
       onClick={buyEnabled ? () => addUpgrade(name, definition.cost) : undefined}
     >
+      <div className="text-primary">{icon && <ArrowUp />}</div>
       <div className="flex-1">
-        <div>{name}</div>
-        <p className="text-xs">{helperText}</p>
+        <p>
+          {name} - <span className="text-xs">{helperText}</span>
+        </p>
         <div className="text-xs font-semibold opacity-60">
           {formatNumber(definition.cost)} - {formatDuration(pp)} PP
           {secondsUntilBuy > 0 && <> - {formatDuration(secondsUntilBuy)}</>}
