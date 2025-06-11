@@ -5,7 +5,6 @@ import { cn, formatDuration, formatNumber, getGeneratorUpgradeCostBulk } from ".
 import { useMemo } from "react";
 import useStats from "../hooks/useStats";
 import { levelThresholds, upgrades } from "../data/upgrades";
-import { max } from "lodash";
 import UpgradeListItem from "./UpgradeListItem";
 
 export default function GeneratorListItem({ name }: { name: string }) {
