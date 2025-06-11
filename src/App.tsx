@@ -31,28 +31,30 @@ export default function App() {
           {/* <StatsGraphs /> */}
           <div className="max-w-2xl mx-auto px-2">
             <div className="card">
-              <CurrentValue />
-              <div className="grid grid-cols-2 my-2">
-                <ValuePerSecond />
-                <ClicksValuePerSecond />
-              </div>
-              <Clicker />
-              <RandomEventButton />
-              <div role="tablist" className="tabs tabs-lift mt-2 md:hidden">
-                <a
-                  role="tab"
-                  className={cn("tab flex-1", { "tab-active": tab === 0 })}
-                  onClick={() => setTab(0)}
-                >
-                  Generators
-                </a>
-                <a
-                  role="tab"
-                  className={cn("tab flex-1", { "tab-active": tab === 1 })}
-                  onClick={() => setTab(1)}
-                >
-                  Upgrades
-                </a>
+              <div className="sticky top-0 card z-10 bg-base-100 pb-1 shadow-xs">
+                <CurrentValue />
+                <div className="grid grid-cols-2 my-2">
+                  <ValuePerSecond />
+                  <ClicksValuePerSecond />
+                </div>
+                <Clicker />
+                <RandomEventButton />
+                <div role="tablist" className="tabs tabs-lift mt-2 md:hidden">
+                  <a
+                    role="tab"
+                    className={cn("tab flex-1", { "tab-active": tab === 0 })}
+                    onClick={() => setTab(0)}
+                  >
+                    Generators
+                  </a>
+                  <a
+                    role="tab"
+                    className={cn("tab flex-1", { "tab-active": tab === 1 })}
+                    onClick={() => setTab(1)}
+                  >
+                    Upgrades
+                  </a>
+                </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
                 <div className={cn("hidden md:block", { block: tab === 0 })}>

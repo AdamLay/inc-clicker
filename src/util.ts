@@ -33,7 +33,7 @@ export function getGeneratorUpgradeCost(
     0
   );
   const levelMult = Math.max(1, Math.pow(2, maxIndex));
-  return baseCost * costMultiplier * (1 + level / 100) * levelMult;
+  return baseCost * costMultiplier * (1 + level / 100) * levelMult * Math.pow(1.03, level / 5);
   //return baseCost * Math.pow(costMultiplier, level) * levelMult;
 }
 
