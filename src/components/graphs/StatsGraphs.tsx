@@ -3,18 +3,6 @@ import { generators } from "../../data/generators";
 import { formatNumber, getGeneratorUpgradeCost } from "../../util";
 import { upgrades } from "../../data/upgrades";
 
-// const data = [
-//   { name: "Page A", uv: 400, pv: 2400, amt: 2400 },
-//   { name: "Page B", uv: 300, pv: 4567, amt: 2400 },
-// ];
-
-const data = generators.flatMap((x) =>
-  Array.from({ length: 50 }).map((_, i) => ({
-    name: x.name,
-    cost: getGeneratorUpgradeCost(x.initialCost, x.multiplier, i + 1),
-  }))
-);
-
 export default function StatsGraphs() {
   return (
     <div>
