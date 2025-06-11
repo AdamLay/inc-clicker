@@ -30,7 +30,7 @@ const upgrade = (
   condition,
 });
 
-const levelRestrictions = [1, 10, 25, 50, 100, 150, 200, 250, 300, 350];
+export const levelThresholds = [10, 25, 50, 100, 150, 200, 250, 300, 350];
 
 const upgradeSet = (
   name: string,
@@ -40,22 +40,22 @@ const upgradeSet = (
   parameter?: string,
   costPow: number = 10
 ): Upgrade[] => {
-  return Array.from({ length: 10 }, (_, i) =>
-    upgrade(
+  return Array.from({ length: 10 }, (_, i) => {
+    return upgrade(
       `${name} (${i + 1})`,
       cost * Math.pow(costPow, i),
       typeof multiplier === "function" ? multiplier(i) : multiplier,
       type,
       parameter,
-      type === UpgradeType.Generator ? (param: number) => param >= levelRestrictions[i] : undefined
-    )
-  );
+      type === UpgradeType.Generator ? (param: number) => param >= levelThresholds[i] : undefined
+    );
+  });
 };
 
 export const upgrades: Upgrade[] = [
   ...upgradeSet("Click Power", 50, (i) => (i + 1) * 1.66, UpgradeType.Clicker),
   ...upgradeSet("Global 2%", 80, 1.02, UpgradeType.Global),
-  ...upgradeSet("Starter", 20, (i) => [2, 3, 2, 3][i] ?? 2, UpgradeType.Generator, "Starter", 8),
+  ...upgradeSet("Starter", 60, (i) => 10, UpgradeType.Generator, "Starter", 8),
   ...upgradeSet(
     "Constructor",
     300,
