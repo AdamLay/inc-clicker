@@ -14,6 +14,7 @@ import Menu from "./components/Menu";
 import ResetConfirmationModal from "./components/ResetConfirmationModal";
 import ClicksValuePerSecond from "./components/ClicksValuePerSecond";
 import RandomEventButton from "./components/RandomEventButton";
+//import StatsGraphs from "./components/graphs/StatsGraphs";
 
 export default function App() {
   const [tab, setTab] = useState(0);
@@ -27,6 +28,7 @@ export default function App() {
         <input id="my-drawer" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content">
           <NavBar />
+          {/* <StatsGraphs /> */}
           <div className="max-w-2xl mx-auto px-2">
             <div className="card">
               <CurrentValue />

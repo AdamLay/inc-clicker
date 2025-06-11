@@ -3,6 +3,8 @@ import { useStore } from "../store/store";
 import { upgrades, UpgradeType } from "../data/upgrades";
 import { formatNumber } from "../util";
 
+const isLocal = window.location.host.startsWith("local");
+
 export default function Clicker() {
   const [increment, myUpgrades, addClickEvent, bonusEvent] = useStore(
     useShallow((state) => [state.increase, state.upgrades, state.addClickEvent, state.bonusEvent])
@@ -13,7 +15,7 @@ export default function Clicker() {
   );
 
   const clickValue =
-    boughtUpgrades.reduce((acc, upgrade) => acc * upgrade.multiplier, 1) *
+    boughtUpgrades.reduce((acc, upgrade) => acc * upgrade.multiplier, isLocal ? 10 : 1) *
     (bonusEvent?.multiplier ?? 1);
 
   const handleClick = () => {

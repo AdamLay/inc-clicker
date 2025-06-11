@@ -1,6 +1,6 @@
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from "recharts";
 import { generators } from "../../data/generators";
-import { formatNumber, getGeneratorUpgradeCost, getGeneratorUpgradeCost2 } from "../../util";
+import { formatNumber, getGeneratorUpgradeCost } from "../../util";
 import { upgrades } from "../../data/upgrades";
 
 // const data = [
@@ -27,19 +27,15 @@ export default function StatsGraphs() {
           const appliedUpgrades = genUpgrades.filter((upg) => upg.condition?.(level) ?? true);
           const upgradeMultiplier = appliedUpgrades.reduce((acc, upg) => acc * upg.multiplier, 1);
           const cost = getGeneratorUpgradeCost(gen.initialCost, gen.multiplier, level);
-          const cost2 = getGeneratorUpgradeCost2(gen.initialCost, gen.multiplier, level);
           const baseVps = gen.valuePerSecond * upgradeMultiplier;
           const vps = gen.valuePerSecond * level * upgradeMultiplier;
           const pp = cost / baseVps;
-          const pp2 = cost2 / baseVps;
           return {
             name: gen.name,
             level,
             cost,
-            cost2,
             vps,
             pp,
-            pp2,
             baseVps,
           };
         });
@@ -49,17 +45,8 @@ export default function StatsGraphs() {
             <LineChart width={1280} height={720} data={data}>
               <CartesianGrid stroke="#ccc" />
               <XAxis dataKey="level" />
-              <YAxis />
-              <Line type="monotone" dataKey="vps" stroke="#82ca9d" />
-              <Line type="monotone" dataKey="cost2" stroke="#8884d8" />
-              <Line type="monotone" dataKey="pp2" stroke="#ff7300" />
-              <Line type="monotone" dataKey="baseVps" stroke="#ff0000" />
-              <Tooltip formatter={(value, name) => [formatNumber(value as any), name]} />
-            </LineChart>
-            <LineChart width={1280} height={720} data={data}>
-              <CartesianGrid stroke="#ccc" />
-              <XAxis dataKey="level" />
-              <YAxis />
+              <YAxis scale="log" domain={["auto", "auto"]} />
+
               <Line type="monotone" dataKey="vps" stroke="#82ca9d" />
               <Line type="monotone" dataKey="cost" stroke="#8884d8" />
               <Line type="monotone" dataKey="pp" stroke="#ffc658" />

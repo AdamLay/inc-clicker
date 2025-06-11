@@ -1,5 +1,6 @@
 import clsx, { type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { levelThresholds } from "./data/upgrades";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -27,7 +28,12 @@ export function getGeneratorUpgradeCost(
   costMultiplier: number,
   level: number
 ): number {
-  return baseCost * Math.pow(costMultiplier, level);
+  const maxIndex = levelThresholds.reduce(
+    (acc, threshold, idx) => (level >= threshold ? idx + 1 : acc),
+    0
+  );
+  const levelMult = Math.pow(10, maxIndex);
+  return baseCost * Math.pow(costMultiplier, level) * levelMult;
 }
 
 export function getGeneratorUpgradeCostBulk(
