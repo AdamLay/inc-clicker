@@ -55,17 +55,17 @@ const upgradeSet = (
 export const upgrades: Upgrade[] = [
   ...upgradeSet("Click Power", 50, (i) => (i + 1) * 1.66, UpgradeType.Clicker),
   ...upgradeSet("Global 2%", 80, 1.02, UpgradeType.Global),
-  ...upgradeSet("Starter", 60, 5, UpgradeType.Generator, "Starter", 8),
-  ...upgradeSet("Constructor", 300, 5, UpgradeType.Generator, "Constructor", 9),
-  ...upgradeSet("Assembler", 4e3, 5, UpgradeType.Generator, "Assembler", 10),
-  ...upgradeSet("Manufacturer", 5e4, 5, UpgradeType.Generator, "Manufacturer", 11),
-  ...upgradeSet("Atomiser", 5e5, 5, UpgradeType.Generator, "Atomiser", 12),
-  ...upgradeSet("Collider", 5e6, 5, UpgradeType.Generator, "Collider", 13),
-  ...upgradeSet("Quantum Generator", 5e7, 5, UpgradeType.Generator, "Quantum Generator", 14),
-  ...upgradeSet("Dark Matter Reactor", 5e8, 5, UpgradeType.Generator, "Dark Matter Reactor", 15),
-  ...upgradeSet("Singularity Engine", 5e9, 5, UpgradeType.Generator, "Singularity Engine", 16),
-  ...upgradeSet("Black Hole Device", 5e10, 5, UpgradeType.Generator, "Black Hole Device", 17),
-  ...upgradeSet("Cosmic Forge", 5e11, 5, UpgradeType.Generator, "Cosmic Forge", 18),
+  ...upgradeSet("Starter", 60, 2, UpgradeType.Generator, "Starter", 8),
+  ...upgradeSet("Constructor", 300, 2, UpgradeType.Generator, "Constructor", 9),
+  ...upgradeSet("Assembler", 4e3, 2, UpgradeType.Generator, "Assembler", 10),
+  ...upgradeSet("Manufacturer", 5e4, 2, UpgradeType.Generator, "Manufacturer", 11),
+  ...upgradeSet("Atomiser", 5e5, 2, UpgradeType.Generator, "Atomiser", 12),
+  ...upgradeSet("Collider", 5e6, 2, UpgradeType.Generator, "Collider", 13),
+  ...upgradeSet("Quantum Generator", 5e7, 2, UpgradeType.Generator, "Quantum Generator", 14),
+  ...upgradeSet("Dark Matter Reactor", 5e8, 2, UpgradeType.Generator, "Dark Matter Reactor", 15),
+  ...upgradeSet("Singularity Engine", 5e9, 2, UpgradeType.Generator, "Singularity Engine", 16),
+  ...upgradeSet("Black Hole Device", 5e10, 2, UpgradeType.Generator, "Black Hole Device", 17),
+  ...upgradeSet("Cosmic Forge", 5e11, 2, UpgradeType.Generator, "Cosmic Forge", 18),
 ];
 
 (window as any).upgrades = upgrades; // For debugging in console

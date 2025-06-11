@@ -32,7 +32,7 @@ export function getGeneratorUpgradeCost(
     (acc, threshold, idx) => (level >= threshold ? idx + 1 : acc),
     0
   );
-  const levelMult = Math.pow(10, maxIndex);
+  const levelMult = Math.pow(2, maxIndex);
   return baseCost * Math.pow(costMultiplier, level) * levelMult;
 }
 
