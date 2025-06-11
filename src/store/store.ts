@@ -9,6 +9,8 @@ export type BonusEvent = { multiplier: number; duration: number; when: number };
 interface State {
   count: number;
   countTotal: number;
+  lifetimeTotal: number;
+  prestigePoints: number;
   increase: (by: number) => void;
   generators: GeneratorState[];
   addGenerator: (name: string, cost: number, count: number) => void;
@@ -28,6 +30,9 @@ interface State {
   addClickEvent: (evt: ClickEvent) => void;
   bonusEvent: BonusEvent | null;
   setBonusEvent: (evt: BonusEvent | null) => void;
+  prestigeConfirmOpen: boolean;
+  setPrestigeConfirmOpen: (open: boolean) => void;
+  setPrestige: (vipp: number) => void;
 
   setCount_Debug: (amt: number) => void;
 }
@@ -39,6 +44,7 @@ export const selectValuePerSecond = (state: {
   generators: GeneratorState[];
   backgroundMode: Date | null;
   bonusEvent?: BonusEvent | null;
+  prestigePoints: number;
 }) => {
   const generatorUpgrades = upgrades.filter(
     (x) => state.upgrades.includes(x.name) && x.type === UpgradeType.Generator
@@ -46,6 +52,8 @@ export const selectValuePerSecond = (state: {
   const globalUpgrades = upgrades.filter(
     (x) => state.upgrades.includes(x.name) && x.type === UpgradeType.Global
   );
+
+  const prestigeMult = 1 + state.prestigePoints * 0.02;
 
   let valuePerSecond = 0;
   for (const gen of state.generators) {
@@ -58,6 +66,7 @@ export const selectValuePerSecond = (state: {
 
   const totalVps =
     globalUpgrades.reduce((acc, next) => acc * next.multiplier, valuePerSecond) *
+    prestigeMult *
     (state.bonusEvent?.multiplier ?? 1);
 
   if (!state.backgroundMode) return totalVps;
@@ -72,8 +81,14 @@ export const useStore = create<State>()(
     (set) => ({
       count: STARTING_COUNT,
       countTotal: STARTING_COUNT,
+      lifetimeTotal: STARTING_COUNT,
+      prestigePoints: 0,
       increase: (by) =>
-        set((state) => ({ count: state.count + by, countTotal: state.countTotal + by })),
+        set((state) => ({
+          count: state.count + by,
+          countTotal: state.countTotal + by,
+          lifetimeTotal: state.lifetimeTotal + by,
+        })),
       generators: [],
       addGenerator: (generatorName: string, cost: number, count: number = 1) =>
         set((state) => {
@@ -123,6 +138,17 @@ export const useStore = create<State>()(
         })),
       bonusEvent: null,
       setBonusEvent: (evt: BonusEvent | null) => set(() => ({ bonusEvent: evt })),
+      prestigeConfirmOpen: false,
+      setPrestigeConfirmOpen: (open: boolean) => set(() => ({ prestigeConfirmOpen: open })),
+      setPrestige: (vipp: number) =>
+        set((state) => ({
+          count: 0,
+          countTotal: 0,
+          prestigePoints: state.prestigePoints + vipp,
+          generators: [],
+          upgrades: [],
+          buyCount: 1,
+        })),
       setCount_Debug: (amt: number) => set(() => ({ count: amt, countTotal: amt })),
     }),
     {
@@ -133,6 +159,9 @@ export const useStore = create<State>()(
         generators: state.generators,
         upgrades: state.upgrades,
         buyCount: state.buyCount,
+        clicks: state.clicks,
+        lifetimeTotal: state.lifetimeTotal,
+        prestigePoints: state.prestigePoints,
       }),
     }
   )

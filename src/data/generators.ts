@@ -89,4 +89,11 @@ export const generators: Generator[] = [
     valuePerSecond: 1e9,
     multiplier: 1.25,
   },
+  {
+    name: "Intergalactic Propagator",
+    level: 1,
+    initialCost: 1e15,
+    valuePerSecond: 1e10,
+    multiplier: 1.25,
+  },
 ];

@@ -6,19 +6,21 @@ import { ArrowUp, Check } from "lucide-react";
 import useStats from "../hooks/useStats";
 
 export default function UpgradeListItem({ name, icon }: { name: string; icon?: boolean }) {
-  const [count, countTotal, addUpgrade, myUpgrades, generators] = useStore(
+  const [count, countTotal, addUpgrade, myUpgrades, generators, prestigePoints] = useStore(
     useShallow((state) => [
       state.count,
       state.countTotal,
       state.addUpgrade,
       state.upgrades,
       state.generators,
+      state.prestigePoints,
     ])
   );
   const currentVps = selectValuePerSecond({
     upgrades: myUpgrades,
     generators,
     backgroundMode: null,
+    prestigePoints,
   });
   const { getGeneratorVps } = useStats();
   const definition = upgrades.find((g) => g.name === name)!;
@@ -40,6 +42,7 @@ export default function UpgradeListItem({ name, icon }: { name: string; icon?: b
         upgrades: [...myUpgrades, name],
         generators,
         backgroundMode: null,
+        prestigePoints,
       });
       const diff = vps - currentVps;
       return definition.cost / diff;
@@ -64,7 +67,7 @@ export default function UpgradeListItem({ name, icon }: { name: string; icon?: b
       return "Increases all generators' output.";
     }
     if (definition.type === UpgradeType.Generator) {
-      return `Increase ${definition.parameter} output by ${definition.multiplier}x`;
+      return `Increase ${definition.parameter} output by ${definition.multiplier.toFixed(1)}x`;
     }
   })();
 

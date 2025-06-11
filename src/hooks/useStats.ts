@@ -3,9 +3,12 @@ import { useStore } from "../store/store";
 import { useCallback } from "react";
 import { upgrades, UpgradeType } from "../data/upgrades";
 import { generators } from "../data/generators";
+import { getPrestigeMultiplier } from "../util";
 
 export default function useStats() {
-  const [myUpgrades] = useStore(useShallow((state) => [state.upgrades]));
+  const [myUpgrades, prestigePoints] = useStore(
+    useShallow((state) => [state.upgrades, state.prestigePoints])
+  );
 
   const getGeneratorVps = useCallback(
     (generatorName: string, level: number, withUpgrades?: string[]) => {
@@ -19,8 +22,11 @@ export default function useStats() {
         );
 
       const genBaseVps = genDefinition.valuePerSecond * level;
+      const prestigeMult = getPrestigeMultiplier(prestigePoints);
 
-      return appliedUpgrades.reduce((acc, next) => acc * next.multiplier, genBaseVps);
+      return (
+        appliedUpgrades.reduce((acc, next) => acc * next.multiplier, genBaseVps) * prestigeMult
+      );
     },
     [myUpgrades]
   );

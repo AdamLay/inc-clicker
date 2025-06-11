@@ -18,7 +18,13 @@ export default function ResetConfirmationModal() {
           <button className="btn btn-ghost" onClick={() => setOpen(false)}>
             Cancel
           </button>
-          <button className="btn btn-warning" onClick={() => resetGame()}>
+          <button
+            className="btn btn-warning"
+            onClick={() => {
+              resetGame();
+              setOpen(false);
+            }}
+          >
             Reset Game
           </button>
         </div>

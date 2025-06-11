@@ -14,10 +14,14 @@ import Menu from "./components/Menu";
 import ResetConfirmationModal from "./components/ResetConfirmationModal";
 import ClicksValuePerSecond from "./components/ClicksValuePerSecond";
 import RandomEventButton from "./components/RandomEventButton";
+import PrestigeConfirmationModal from "./components/PrestigeConfirmationModal";
+import { useStore } from "./store/store";
+import { useShallow } from "zustand/react/shallow";
 //import StatsGraphs from "./components/graphs/StatsGraphs";
 
 export default function App() {
   const [tab, setTab] = useState(0);
+  const [prestigeConfirmOpen] = useStore(useShallow((state) => [state.prestigeConfirmOpen]));
   useGameLoop();
   useBackgroundGeneration();
   useDebugCheats();
@@ -71,6 +75,7 @@ export default function App() {
       </div>
       <HelpDialog />
       <ResetConfirmationModal />
+      {prestigeConfirmOpen && <PrestigeConfirmationModal />}
     </>
   );
 }

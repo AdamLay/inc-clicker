@@ -26,6 +26,7 @@ export default function HelpDialog() {
           PP = "Payback Period". Smaller values are better! The time it takes for an
           upgrade/generator to pay itself off.
         </p>
+        <p className="mt-4">VIPP = "Very Important Prestige Points".</p>
         <div className="modal-action">
           <form method="dialog">
             <button className="btn">Close</button>

@@ -1,21 +1,29 @@
 import { useShallow } from "zustand/react/shallow";
 import { useStore } from "../store/store";
 import { upgrades, UpgradeType } from "../data/upgrades";
-import { formatNumber } from "../util";
+import { formatNumber, getPrestigeMultiplier } from "../util";
 
 const isLocal = window.location.host.startsWith("local");
 
 export default function Clicker() {
-  const [increment, myUpgrades, addClickEvent, bonusEvent] = useStore(
-    useShallow((state) => [state.increase, state.upgrades, state.addClickEvent, state.bonusEvent])
+  const [increment, myUpgrades, addClickEvent, bonusEvent, prestigePoints] = useStore(
+    useShallow((state) => [
+      state.increase,
+      state.upgrades,
+      state.addClickEvent,
+      state.bonusEvent,
+      state.prestigePoints,
+    ])
   );
 
   const boughtUpgrades = upgrades.filter(
     (x) => x.type === UpgradeType.Clicker && myUpgrades.includes(x.name)
   );
+  const prestigeMult = getPrestigeMultiplier(prestigePoints);
 
   const clickValue =
     boughtUpgrades.reduce((acc, upgrade) => acc * upgrade.multiplier, isLocal ? 10 : 1) *
+    prestigeMult *
     (bonusEvent?.multiplier ?? 1);
 
   const handleClick = () => {

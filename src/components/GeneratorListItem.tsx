@@ -8,21 +8,24 @@ import { levelThresholds, upgrades } from "../data/upgrades";
 import UpgradeListItem from "./UpgradeListItem";
 
 export default function GeneratorListItem({ name }: { name: string }) {
-  const [count, countTotal, myUpgrades, addGenerator, myGenerators, buyCount] = useStore(
-    useShallow((state) => [
-      state.count,
-      state.countTotal,
-      state.upgrades,
-      state.addGenerator,
-      state.generators,
-      state.buyCount,
-    ])
-  );
+  const [count, countTotal, myUpgrades, addGenerator, myGenerators, buyCount, prestigePoints] =
+    useStore(
+      useShallow((state) => [
+        state.count,
+        state.countTotal,
+        state.upgrades,
+        state.addGenerator,
+        state.generators,
+        state.buyCount,
+        state.prestigePoints,
+      ])
+    );
   const { getGeneratorVps } = useStats();
   const currentVps = selectValuePerSecond({
     upgrades: myUpgrades,
     generators: myGenerators,
     backgroundMode: null,
+    prestigePoints,
   });
 
   // Static ?
