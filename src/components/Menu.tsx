@@ -10,7 +10,7 @@ export default function Menu() {
     useShallow((state) => [state.setHelpOpen, state.setResetConfirmOpen, state.clicks])
   );
   return (
-    <div className="drawer-side">
+    <div className="drawer-side z-50">
       <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
       <div className="menu bg-base-200 text-base-content w-80 min-h-full p-4">
         <ul>
