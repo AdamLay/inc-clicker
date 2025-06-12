@@ -61,7 +61,10 @@ export default function UpgradeListItem({ name, icon }: { name: string; icon?: b
 
   const helperText = (() => {
     if (definition.type === UpgradeType.Clicker) {
-      return "Increases click value.";
+      return `Increases click value by ${definition.multiplier}.`;
+    }
+    if (definition.type === UpgradeType.ClickerPrc) {
+      return `Increases click multiplier by ${definition.multiplier.toFixed(0)}x.`;
     }
     if (definition.type === UpgradeType.Global) {
       return "Increases all generators' output.";

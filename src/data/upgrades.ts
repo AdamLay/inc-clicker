@@ -1,6 +1,7 @@
 export const UpgradeType = {
   Generator: "Generator",
   Clicker: "Clicker",
+  ClickerPrc: "ClickerPrc",
   Global: "Global",
 } as const;
 export type UpgradeType = (typeof UpgradeType)[keyof typeof UpgradeType];
@@ -41,9 +42,10 @@ const upgradeSet = (
   multiplier: number | ((index: number) => number),
   type: UpgradeType,
   parameter?: string,
-  costPow: number = 10
+  costPow: number = 10,
+  upgradeCount: number = 20
 ): Upgrade[] => {
-  return Array.from({ length: 20 }, (_, i) => {
+  return Array.from({ length: upgradeCount }, (_, i) => {
     return upgrade(
       `${name} (${i + 1})`,
       cost * Math.pow(costPow, i),
@@ -58,7 +60,8 @@ const upgradeSet = (
 const generatorMult = (i: number) => 2 * Math.pow(1.05, i);
 
 export const upgrades: Upgrade[] = [
-  ...upgradeSet("Click Power", 50, (i) => 3 * (i + 1) * 0.33, UpgradeType.Clicker),
+  ...upgradeSet("Click Power", 50, (i) => (i + 1) * 2, UpgradeType.Clicker, "", 10, 5),
+  ...upgradeSet("Click Percent", 5e6, 1.1, UpgradeType.ClickerPrc, "", 10, 20),
   ...upgradeSet("Global 2%", 80, 1.02, UpgradeType.Global),
   ...upgradeSet("Starter", 60, generatorMult, UpgradeType.Generator, "Starter", 8),
   ...upgradeSet("Constructor", 300, generatorMult, UpgradeType.Generator, "Constructor", 9),
