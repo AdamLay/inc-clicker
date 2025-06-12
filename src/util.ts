@@ -75,10 +75,10 @@ export function formatDuration(seconds: number) {
 
 export function getNextPrestigePoints(countTotal: number, lifetimeTotal: number): number {
   const previousSession = Math.max(0, lifetimeTotal - countTotal);
-  const x = (input: number) => Math.pow(input, 0.25);
+  const x = (input: number) => Math.pow(input, 0.2);
   const a = x(lifetimeTotal);
   const b = x(previousSession);
-  return a - b;
+  return Math.abs(a - b);
 }
 
 export function getPrestigeMultiplier(prestigePoints: number) {

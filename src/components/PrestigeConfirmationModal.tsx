@@ -1,16 +1,17 @@
 import { ArrowUp01Icon } from "lucide-react";
 import { useStore } from "../store/store";
 import { useShallow } from "zustand/react/shallow";
-import { formatNumber, getNextPrestigePoints } from "../util";
+import { formatNumber, getNextPrestigePoints, getPrestigeMultiplier } from "../util";
 
 export default function PrestigeConfirmationModal() {
-  const [open, setOpen, setPrestige, countTotal, lifetimeTotal] = useStore(
+  const [open, setOpen, setPrestige, countTotal, lifetimeTotal, prestigePoints] = useStore(
     useShallow((state) => [
       state.prestigeConfirmOpen,
       state.setPrestigeConfirmOpen,
       state.setPrestige,
       state.countTotal,
       state.lifetimeTotal,
+      state.prestigePoints,
     ])
   );
 
@@ -22,6 +23,10 @@ export default function PrestigeConfirmationModal() {
         <h3 className="font-bold text-lg text-primary">Prestige!</h3>
         <p className="py-4 text-lg">
           You will earn: <span className="font-bold">{formatNumber(nextVipp)} VIPP</span>
+        </p>
+        <p className="py-4">
+          Each VIPP adds 1% to your vps. If you prestige now, your new multiplier will be:{" "}
+          {getPrestigeMultiplier(prestigePoints + nextVipp).toFixed(1)}x
         </p>
         <p className="py-4">
           Are you sure you want to reset the game? This will reset your count, generators and

@@ -3,7 +3,7 @@ import { useStore } from "../store/store";
 import { useShallow } from "zustand/react/shallow";
 import InstallAppPrompt from "./InstallAppPrompt";
 import TotalCountDisplay from "./TotalCountDisplay";
-import { formatNumber } from "../util";
+import { formatNumber, getPrestigeMultiplier } from "../util";
 import LifetimeTotalDisplay from "./LifetimeTotalDisplay";
 
 export default function Menu() {
@@ -58,7 +58,8 @@ export default function Menu() {
             Clicks: <span>{formatNumber(clicks)}</span>
           </p>
           <p>
-            VIPP: <span>{formatNumber(prestigePoints)}</span>
+            VIPP: {getPrestigeMultiplier(prestigePoints).toFixed(1)}x (
+            <span>{formatNumber(prestigePoints)})</span>
           </p>
         </div>
       </div>
