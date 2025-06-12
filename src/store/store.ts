@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { generators, type GeneratorState } from "../data/generators";
 import { upgrades, UpgradeType } from "../data/upgrades";
+import { getPrestigeMultiplier } from "../util";
 
 export type ClickEvent = { value: number; when: number };
 export type BonusEvent = { multiplier: number; duration: number; when: number };
@@ -54,7 +55,7 @@ export const selectValuePerSecond = (state: {
     (x) => state.upgrades.includes(x.name) && x.type === UpgradeType.Global
   );
 
-  const prestigeMult = 1 + state.prestigePoints * 0.02;
+  const prestigeMult = getPrestigeMultiplier(state.prestigePoints);
 
   let valuePerSecond = 0;
   for (const gen of state.generators) {
