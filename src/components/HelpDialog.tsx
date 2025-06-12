@@ -27,6 +27,17 @@ export default function HelpDialog() {
           upgrade/generator to pay itself off.
         </p>
         <p className="mt-4">VIPP = "Very Important Prestige Points".</p>
+
+        <p className="font-bold mt-4">Saving and Loading:</p>
+        <p>
+          You can save your game progress to a file using the "Save Game" option in the menu. This
+          will download a JSON file with your current game state that you can backup or share.
+        </p>
+        <p>
+          To load a previously saved game, use the "Load Game" option and select your saved JSON
+          file. This will restore your game to the state it was in when you saved it.
+        </p>
+
         <div className="modal-action">
           <form method="dialog">
             <button className="btn">Close</button>

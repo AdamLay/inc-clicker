@@ -35,6 +35,10 @@ interface State {
   setPrestigeConfirmOpen: (open: boolean) => void;
   setPrestige: (vipp: number) => void;
 
+  // Save/load game functionality
+  saveGameToFile: () => void;
+  loadGameFromFile: (saveData: string) => void;
+
   setCount_Debug: (amt: number) => void;
   setPrestige_Debug: (amt: number) => void;
 }
@@ -80,7 +84,7 @@ export const selectValuePerSecond = (state: {
 
 export const useStore = create<State>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       count: STARTING_COUNT,
       countTotal: STARTING_COUNT,
       lifetimeTotal: STARTING_COUNT,
@@ -153,6 +157,68 @@ export const useStore = create<State>()(
           upgrades: [],
           buyCount: 1,
         })),
+
+      // Save/load game functionality
+      saveGameToFile: () => {
+        const state = get();
+        const saveData = {
+          count: state.count,
+          countTotal: state.countTotal,
+          lifetimeTotal: state.lifetimeTotal,
+          prestigePoints: state.prestigePoints,
+          generators: state.generators,
+          upgrades: state.upgrades,
+          buyCount: state.buyCount,
+          clicks: state.clicks,
+          version: 1, // Version for future compatibility
+          timestamp: new Date().toISOString(),
+        };
+
+        const blob = new Blob([JSON.stringify(saveData, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `inc-clicker-save-${new Date().toISOString().slice(0, 10)}.json`;
+        document.body.appendChild(a);
+        a.click();
+
+        // Clean up
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      },
+
+      loadGameFromFile: (saveData: string) => {
+        try {
+          const parsedData = JSON.parse(saveData);
+
+          // Validate required fields
+          if (
+            parsedData.count === undefined ||
+            parsedData.countTotal === undefined ||
+            parsedData.generators === undefined ||
+            parsedData.upgrades === undefined
+          ) {
+            throw new Error("Invalid save file format");
+          }
+
+          set({
+            count: parsedData.count,
+            countTotal: parsedData.countTotal,
+            lifetimeTotal: parsedData.lifetimeTotal || parsedData.countTotal,
+            prestigePoints: parsedData.prestigePoints || 0,
+            generators: parsedData.generators,
+            upgrades: parsedData.upgrades,
+            buyCount: parsedData.buyCount || 1,
+            clicks: parsedData.clicks || 0,
+            clickEvents: [],
+          });
+        } catch (error) {
+          console.error("Failed to load game data:", error);
+          alert("Failed to load game data. The save file might be corrupted.");
+        }
+      },
+
       setCount_Debug: (amt: number) =>
         set(() => ({ count: amt, countTotal: amt, lifetimeTotal: amt })),
       setPrestige_Debug: (amt: number) => set(() => ({ prestigePoints: amt })),
