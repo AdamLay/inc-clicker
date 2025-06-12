@@ -7,7 +7,13 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatNumber(num: number): string {
-  if (num >= 1e18) {
+  if (num >= 1e27) {
+    return (num / 1e27).toFixed(3) + "Oc";
+  } else if (num >= 1e24) {
+    return (num / 1e24).toFixed(3) + "Sp";
+  } else if (num >= 1e21) {
+    return (num / 1e21).toFixed(3) + "Sx";
+  } else if (num >= 1e18) {
     return (num / 1e18).toFixed(3) + "Qn";
   } else if (num >= 1e15) {
     return (num / 1e15).toFixed(3) + "Qd";

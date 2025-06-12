@@ -35,6 +35,7 @@ interface State {
   setPrestige: (vipp: number) => void;
 
   setCount_Debug: (amt: number) => void;
+  setPrestige_Debug: (amt: number) => void;
 }
 
 const STARTING_COUNT = 0;
@@ -123,6 +124,8 @@ export const useStore = create<State>()(
           generators: [],
           upgrades: [],
           buyCount: 1,
+          lifetimeTotal: 0,
+          prestigePoints: 0,
           resetConfirmOpen: false,
         })),
       clicks: 0,
@@ -149,7 +152,9 @@ export const useStore = create<State>()(
           upgrades: [],
           buyCount: 1,
         })),
-      setCount_Debug: (amt: number) => set(() => ({ count: amt, countTotal: amt })),
+      setCount_Debug: (amt: number) =>
+        set(() => ({ count: amt, countTotal: amt, lifetimeTotal: amt })),
+      setPrestige_Debug: (amt: number) => set(() => ({ prestigePoints: amt })),
     }),
     {
       name: "inc-clicker-storage", // unique name for localStorage key
