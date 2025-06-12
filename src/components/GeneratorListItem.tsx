@@ -1,7 +1,13 @@
 import { useShallow } from "zustand/react/shallow";
 import { generators } from "../data/generators";
 import { selectValuePerSecond, useStore } from "../store/store";
-import { cn, formatDuration, formatNumber, getGeneratorUpgradeCostBulk } from "../util";
+import {
+  cn,
+  formatDuration,
+  formatNumber,
+  getGeneratorUpgradeCost,
+  getGeneratorUpgradeCostBulk,
+} from "../util";
 import { useMemo } from "react";
 import useStats from "../hooks/useStats";
 import { levelThresholds, upgrades } from "../data/upgrades";
@@ -34,6 +40,12 @@ export default function GeneratorListItem({ name }: { name: string }) {
   const baseVps = useMemo(() => getGeneratorVps(name, 1), [myUpgrades, definition]);
 
   const generator = myGenerators.find((x) => x.name === name);
+
+  const upgradeCostOne = useMemo(
+    () =>
+      getGeneratorUpgradeCost(definition.initialCost, definition.multiplier, generator?.level ?? 0),
+    [definition, generator]
+  );
 
   const upgradeCost = useMemo(
     () =>
@@ -75,7 +87,7 @@ export default function GeneratorListItem({ name }: { name: string }) {
   const buyEnabled = count >= upgradeCost;
   const secondsUntilBuy = Math.max(0, (upgradeCost - count) / currentVps);
 
-  if (countTotal < upgradeCost * 0.01) return null;
+  if (countTotal < upgradeCostOne * 0.01) return null;
 
   return (
     <>
@@ -83,7 +95,7 @@ export default function GeneratorListItem({ name }: { name: string }) {
         className={cn(
           "list-row flex items-center select-none gap-2",
           buyEnabled ? "cursor-pointer hover:bg-base-200" : "cursor-not-allowed opacity-50",
-          countTotal < upgradeCost * 0.1 ? "blur-[2px] opacity-25 backdrop-brightness-50" : null
+          countTotal < upgradeCostOne * 0.1 ? "blur-[2px] opacity-25 backdrop-brightness-50" : null
         )}
         onClick={buyEnabled ? () => addGenerator(name, upgradeCost, buyCount) : undefined}
       >
