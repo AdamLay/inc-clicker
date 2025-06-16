@@ -8,7 +8,7 @@ export default function Generators() {
       <BuyCountSelector />
       <ul className="list bg-base-100 rounded-box shadow-md mt-2">
         {generators.map((generator) => (
-          <GeneratorListItem key={generator.name} name={generator.name} />
+          <GeneratorListItem key={generator.name} name={generator.name} definition={generator} />
         ))}
       </ul>
     </div>

@@ -110,6 +110,22 @@ export const upgrades: Upgrade[] = [
     "Intergalactic Propagator",
     19
   ),
+  ...upgradeSet(
+    "Multiversal Conduit",
+    1e18,
+    generatorMult,
+    UpgradeType.Generator,
+    "Multiversal Conduit",
+    20
+  ),
+  ...upgradeSet(
+    "Transdimensional Nexus",
+    1e20,
+    generatorMult,
+    UpgradeType.Generator,
+    "Transdimensional Nexus",
+    21
+  ),
 ];
 
 (window as any).upgrades = upgrades; // For debugging in console

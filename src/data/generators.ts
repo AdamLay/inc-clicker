@@ -96,4 +96,18 @@ export const generators: Generator[] = [
     valuePerSecond: 1e10,
     multiplier: 1.25,
   },
+  {
+    name: "Multiversal Conduit",
+    level: 1,
+    initialCost: 1e17,
+    valuePerSecond: 1e12,
+    multiplier: 1.25,
+  },
+  {
+    name: "Transdimensional Nexus",
+    level: 1,
+    initialCost: 1e19,
+    valuePerSecond: 1e14,
+    multiplier: 1.25,
+  },
 ];
