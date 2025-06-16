@@ -165,7 +165,7 @@ const TimeUntilBuy = function ({
 }) {
   if (count > upgradeCost) return null;
   const secondsUntilBuy = Math.max(0, (upgradeCost - count) / currentVps);
-  return <span>{formatDuration(secondsUntilBuy)}</span>;
+  return <span> - {formatDuration(secondsUntilBuy)}</span>;
 };
 
 const PendingUpgrade = memo(function ({
