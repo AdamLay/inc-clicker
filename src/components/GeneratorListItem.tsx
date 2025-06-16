@@ -1,5 +1,5 @@
 import { useShallow } from "zustand/react/shallow";
-import { generators, type Generator } from "../data/generators";
+import { type Generator } from "../data/generators";
 import { selectValuePerSecond, useStore } from "../store/store";
 import { cn, formatDuration, formatNumber, getGeneratorUpgradeCostBulk } from "../util";
 import { memo, useMemo } from "react";
