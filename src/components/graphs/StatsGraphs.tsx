@@ -14,7 +14,7 @@ export default function StatsGraphs() {
           const level = i + 1;
           const appliedUpgrades = genUpgrades.filter((upg) => upg.condition?.(level) ?? true);
           const upgradeMultiplier = appliedUpgrades.reduce((acc, upg) => acc * upg.multiplier, 1);
-          const cost = getGeneratorUpgradeCost(gen.initialCost, gen.multiplier, level);
+          const cost = getGeneratorUpgradeCost(gen.initialCost, gen.multiplier, level, 0);
           const baseVps = gen.valuePerSecond * upgradeMultiplier;
           const vps = gen.valuePerSecond * level * upgradeMultiplier;
           const pp = cost / baseVps;

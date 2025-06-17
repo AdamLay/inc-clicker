@@ -48,11 +48,18 @@ export default function UpgradeListItem({ name, icon }: { name: string; icon?: b
       return definition.cost / diff;
     }
     if (definition.type === UpgradeType.Generator) {
-      const newGenVps = getGeneratorVps(definition.parameter!, gen?.level ?? 0, [
-        ...myUpgrades,
-        name,
-      ]);
-      const currentGenVps = getGeneratorVps(definition.parameter!, gen?.level ?? 0, myUpgrades);
+      const newGenVps = getGeneratorVps(
+        definition.parameter!,
+        gen?.level ?? 0,
+        gen?.ascension ?? 0,
+        [...myUpgrades, name]
+      );
+      const currentGenVps = getGeneratorVps(
+        definition.parameter!,
+        gen?.level ?? 0,
+        gen?.ascension ?? 0,
+        myUpgrades
+      );
       const diff = newGenVps - currentGenVps;
       return definition.cost / diff;
     }

@@ -12,7 +12,6 @@ import { memo, useMemo } from "react";
 import useStats from "../hooks/useStats";
 import { levelThresholds, upgrades } from "../data/upgrades";
 import UpgradeListItem from "./UpgradeListItem";
-import { StarIcon } from "lucide-react";
 
 export default function GeneratorListItem({
   name,
@@ -116,7 +115,7 @@ export default function GeneratorListItem({
         onClick={buyEnabled ? handleClick : undefined}
       >
         <div className="flex-1">
-          <Title name={name} upgradeCount={upgradeCount} ascension={generator?.ascension} />
+          <Title name={name} upgradeCount={upgradeCount} ascension={generator?.ascension ?? 0} />
           {ascensionReady ? (
             <p className="text-sm opacity-75">Ascension ready! {formatNumber(upgradeCostOne)}</p>
           ) : (
