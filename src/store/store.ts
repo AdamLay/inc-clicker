@@ -15,6 +15,7 @@ interface State {
   increase: (by: number) => void;
   generators: GeneratorState[];
   addGenerator: (name: string, cost: number, count: number) => void;
+  ascendGenerator: (name: string, cost: number) => void;
   upgrades: string[];
   addUpgrade: (name: string, cost: number) => void;
   buyCount: number;
@@ -103,11 +104,20 @@ export const useStore = create<State>()(
             count: state.count - cost,
             generators: exists
               ? state.generators.map((g) =>
-                  g.name === generatorName ? { ...g, level: g.level + count } : g
+                  g.name === generatorName
+                    ? { ...g, level: g.level + count, ascension: g.ascension ?? 0 }
+                    : g
                 )
-              : [...state.generators, { name: generatorName, level: count }],
+              : [...state.generators, { name: generatorName, level: count, ascension: 0 }],
           };
         }),
+      ascendGenerator: (name: string, cost: number) =>
+        set((state) => ({
+          count: state.count - cost,
+          generators: state.generators.map((g) =>
+            g.name === name ? { ...g, level: 1, ascension: (g.ascension ?? 0) + 1 } : g
+          ),
+        })),
       upgrades: [],
       addUpgrade: (name: string, cost: number) =>
         set((state) => ({

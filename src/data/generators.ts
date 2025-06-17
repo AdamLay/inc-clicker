@@ -9,6 +9,7 @@ export type Generator = {
 export type GeneratorState = {
   name: string;
   level: number;
+  ascension: number;
 };
 
 export const GEN_MAX_LEVEL = 1000;

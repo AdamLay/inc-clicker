@@ -1,6 +1,7 @@
 import clsx, { type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { levelThresholds } from "./data/upgrades";
+import { GEN_MAX_LEVEL } from "./data/generators";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -32,14 +33,24 @@ export function formatNumber(num: number): string {
 export function getGeneratorUpgradeCost(
   baseCost: number,
   costMultiplier: number,
-  level: number
+  level: number,
+  ascension: number
 ): number {
+  const actualLevel = level + ascension * GEN_MAX_LEVEL;
   const maxIndex = levelThresholds.reduce(
-    (acc, threshold, idx) => (level >= threshold ? idx + 1 : acc),
+    (acc, threshold, idx) => (actualLevel >= threshold ? idx + 1 : acc),
     0
   );
   const levelMult = Math.max(1, Math.pow(2, maxIndex));
-  return baseCost * costMultiplier * (1 + level / 100) * levelMult * Math.pow(1.03, level / 2);
+  const ascensionMult = Math.max(1, ascension * 1e4);
+  return (
+    baseCost *
+    costMultiplier *
+    (1 + actualLevel / 100) *
+    levelMult *
+    ascensionMult *
+    Math.pow(1.03, actualLevel / 2)
+  );
   //return baseCost * Math.pow(costMultiplier, level) * levelMult;
 }
 
@@ -47,11 +58,12 @@ export function getGeneratorUpgradeCostBulk(
   baseCost: number,
   costMultiplier: number,
   currentLevel: number,
-  targetLevel: number
+  targetLevel: number,
+  ascension: number
 ): number {
   let totalCost = 0;
   for (let i = currentLevel; i < targetLevel; i++) {
-    totalCost += getGeneratorUpgradeCost(baseCost, costMultiplier, i);
+    totalCost += getGeneratorUpgradeCost(baseCost, costMultiplier, i, ascension);
   }
   return totalCost;
 }

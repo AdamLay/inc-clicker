@@ -42,7 +42,7 @@ export default function RandomEventButton() {
   return (
     <>
       {visible && !bonusEvent && (
-        <button className="btn py-6 mt-2 btn-success" onClick={handleClick}>
+        <button className="btn py-6 mt-2 btn-primary" onClick={handleClick}>
           Bonus generation event!
         </button>
       )}

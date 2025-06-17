@@ -11,7 +11,7 @@ export default function useStats() {
   );
 
   const getGeneratorVps = useCallback(
-    (generatorName: string, level: number, withUpgrades?: string[]) => {
+    (generatorName: string, level: number, ascension: number, withUpgrades?: string[]) => {
       const genDefinition = generators.find((g) => g.name === generatorName)!;
       const appliedUpgrades = upgrades
         .filter((x) => (withUpgrades || myUpgrades).includes(x.name))
@@ -21,7 +21,7 @@ export default function useStats() {
             (x.type === UpgradeType.Generator && x.parameter === generatorName)
         );
 
-      const genBaseVps = genDefinition.valuePerSecond * level;
+      const genBaseVps = genDefinition.valuePerSecond * level * Math.max(1, ascension * 1e6);
       const prestigeMult = getPrestigeMultiplier(prestigePoints);
 
       return (
