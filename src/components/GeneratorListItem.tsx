@@ -1,5 +1,5 @@
 import { useShallow } from "zustand/react/shallow";
-import { type Generator } from "../data/generators";
+import { GEN_MAX_LEVEL, type Generator } from "../data/generators";
 import { selectValuePerSecond, useStore } from "../store/store";
 import { cn, formatDuration, formatNumber, getGeneratorUpgradeCostBulk } from "../util";
 import { memo, useMemo } from "react";
@@ -42,6 +42,7 @@ export default function GeneratorListItem({
   const genUpgrades = useMemo(() => upgrades.filter((x) => x.parameter === name), [name, upgrades]);
   const baseVps = useMemo(() => getGeneratorVps(name, 1), [myUpgrades, definition]);
   const generator = useMemo(() => myGenerators.find((x) => x.name === name), [myGenerators, name]);
+  const currentLevel = generator?.level ?? 0;
 
   const upgradeCost = useMemo(
     () =>
@@ -59,7 +60,7 @@ export default function GeneratorListItem({
     [genUpgrades, myUpgrades]
   );
 
-  const buyEnabled = count >= upgradeCost;
+  const buyEnabled = count >= upgradeCost && currentLevel + buyCount <= GEN_MAX_LEVEL;
 
   if (countTotal < definition.initialCost * 0.01) return null;
 
@@ -149,7 +150,7 @@ const Right = memo(function ({
     <>
       <p>{formatNumber(vps)}/s</p>
       <p className="text-xs opacity-75">{vpsPercent.toFixed(1)}%</p>
-      <div className="text-2xl font-bold">{level}</div>
+      <div className="text-2xl font-bold">{level >= GEN_MAX_LEVEL ? "MAX" : level}</div>
     </>
   );
 });

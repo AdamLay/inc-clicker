@@ -11,6 +11,8 @@ export type GeneratorState = {
   level: number;
 };
 
+export const GEN_MAX_LEVEL = 1000;
+
 export const generators: Generator[] = [
   {
     name: "Starter",
