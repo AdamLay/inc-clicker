@@ -21,7 +21,7 @@ export default function useStats() {
             (x.type === UpgradeType.Generator && x.parameter === generatorName)
         );
 
-      const genBaseVps = genDefinition.valuePerSecond * level * Math.max(1, ascension * 1e6);
+      const genBaseVps = genDefinition.valuePerSecond * level * Math.max(1, ascension * 1e4);
       const prestigeMult = getPrestigeMultiplier(prestigePoints);
 
       return (

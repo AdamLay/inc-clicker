@@ -65,7 +65,8 @@ export const selectValuePerSecond = (state: {
   let valuePerSecond = 0;
   for (const gen of state.generators) {
     const definition = generators.find((g) => g.name === gen.name)!;
-    const genBaseVps = definition.valuePerSecond * gen.level;
+    const genBaseVps =
+      definition.valuePerSecond * gen.level * Math.max(1, (gen.ascension ?? 0) * 1e4);
     const genUpgrades = generatorUpgrades.filter((x) => x.parameter === gen.name);
     const genVps = genUpgrades.reduce((acc, next) => acc * next.multiplier, genBaseVps);
     valuePerSecond += genVps;
