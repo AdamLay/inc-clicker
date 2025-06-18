@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { generators, type GeneratorState } from "../data/generators";
 import { upgrades, UpgradeType } from "../data/upgrades";
-import { getPrestigeMultiplier } from "../util";
+import { getGeneratorBaseVps, getPrestigeMultiplier } from "../util";
 
 export type ClickEvent = { value: number; when: number };
 export type BonusEvent = { multiplier: number; duration: number; when: number };
@@ -65,8 +65,7 @@ export const selectValuePerSecond = (state: {
   let valuePerSecond = 0;
   for (const gen of state.generators) {
     const definition = generators.find((g) => g.name === gen.name)!;
-    const genBaseVps =
-      definition.valuePerSecond * gen.level * Math.max(1, (gen.ascension ?? 0) * 1e4);
+    const genBaseVps = getGeneratorBaseVps(definition, gen.level, gen.ascension ?? 0);
     const genUpgrades = generatorUpgrades.filter((x) => x.parameter === gen.name);
     const genVps = genUpgrades.reduce((acc, next) => acc * next.multiplier, genBaseVps);
     valuePerSecond += genVps;
@@ -105,10 +104,10 @@ export const useStore = create<State>()(
             count: state.count - cost,
             generators: exists
               ? state.generators.map((g) =>
-                  g.name === generatorName
-                    ? { ...g, level: g.level + count, ascension: g.ascension ?? 0 }
-                    : g
-                )
+                g.name === generatorName
+                  ? { ...g, level: g.level + count, ascension: g.ascension ?? 0 }
+                  : g
+              )
               : [...state.generators, { name: generatorName, level: count, ascension: 0 }],
           };
         }),

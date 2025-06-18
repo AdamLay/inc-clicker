@@ -3,7 +3,7 @@ import { useStore } from "../store/store";
 import { useCallback } from "react";
 import { upgrades, UpgradeType } from "../data/upgrades";
 import { generators } from "../data/generators";
-import { getPrestigeMultiplier } from "../util";
+import { getGeneratorBaseVps, getPrestigeMultiplier } from "../util";
 
 export default function useStats() {
   const [myUpgrades, prestigePoints] = useStore(
@@ -21,14 +21,14 @@ export default function useStats() {
             (x.type === UpgradeType.Generator && x.parameter === generatorName)
         );
 
-      const genBaseVps = genDefinition.valuePerSecond * level * Math.max(1, ascension * 1e4);
+      const genBaseVps = getGeneratorBaseVps(genDefinition, level, ascension);
       const prestigeMult = getPrestigeMultiplier(prestigePoints);
 
       return (
         appliedUpgrades.reduce((acc, next) => acc * next.multiplier, genBaseVps) * prestigeMult
       );
     },
-    [myUpgrades]
+    [myUpgrades, prestigePoints]
   );
 
   return { getGeneratorVps };

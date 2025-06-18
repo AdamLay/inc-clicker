@@ -12,7 +12,7 @@ export default function RandomEventButton() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (!visible && Math.random() < 0.001) {
+      if (!visible && Math.random() < 0.002) {
         setVisible(true);
       }
       if (bonusEvent) {
@@ -21,7 +21,7 @@ export default function RandomEventButton() {
       }
     }, 250);
     return () => clearInterval(interval);
-  }, [bonusEvent]);
+  }, [bonusEvent, visible]);
 
   const handleClick = () => {
     const duration = (10 + Math.random() * 5) * 1000; // 10-15 seconds

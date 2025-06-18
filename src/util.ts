@@ -1,7 +1,7 @@
 import clsx, { type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { levelThresholds } from "./data/upgrades";
-import { GEN_MAX_LEVEL } from "./data/generators";
+import { GEN_MAX_LEVEL, type Generator } from "./data/generators";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -42,7 +42,7 @@ export function getGeneratorUpgradeCost(
     0
   );
   const levelMult = Math.max(1, Math.pow(2, maxIndex));
-  const ascensionMult = Math.max(1, ascension * 1e4);
+  const ascensionMult = Math.max(1, (ascension + level === GEN_MAX_LEVEL ? 1 : 0) * 1e5);
   return (
     baseCost *
     costMultiplier *
@@ -95,4 +95,8 @@ export function getNextPrestigePoints(countTotal: number, lifetimeTotal: number)
 
 export function getPrestigeMultiplier(prestigePoints: number) {
   return 1 + prestigePoints * 0.01;
+}
+
+export function getGeneratorBaseVps(defintion: Generator, level: number, ascension: number): number {
+  return defintion.valuePerSecond * level * Math.max(1, ascension * 1e6);
 }
