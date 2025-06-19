@@ -102,5 +102,6 @@ export function getPrestigeMultiplier(prestigePoints: number) {
 }
 
 export function getGeneratorBaseVps(defintion: Generator, level: number, ascension: number): number {
-  return defintion.valuePerSecond * level * Math.max(1, ascension * 1e5);
+  //return defintion.valuePerSecond * level * Math.max(1, Math.pow(10, ascension) * 1e5);
+  return defintion.valuePerSecond * level * Math.max(1, ascension * Math.pow(1e5, Math.max(1, ascension)));
 }
