@@ -6,7 +6,7 @@ export default function ValuePerSecond() {
   const valuePerSecond = useStore(useShallow(selectValuePerSecond));
 
   return (
-    <div className="text-xl text-center text-gray-700 dark:text-gray-200">
+    <div className="text-xl text-center">
       <span className="text-sm opacity-75">Generators</span> {formatNumber(valuePerSecond)}/s
     </div>
   );

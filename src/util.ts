@@ -8,7 +8,11 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatNumber(num: number, places: number = 3): string {
-  if (num >= 1e27) {
+  if (num >= 1e33) {
+    return (num / 1e33).toFixed(places) + "De";
+  } else if (num >= 1e30) {
+    return (num / 1e30).toFixed(places) + "No";
+  } else if (num >= 1e27) {
     return (num / 1e27).toFixed(places) + "Oc";
   } else if (num >= 1e24) {
     return (num / 1e24).toFixed(places) + "Sp";

@@ -12,7 +12,7 @@ export default function RandomEventButton() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (!visible && Math.random() < 0.002) {
+      if (!visible && Math.random() < 0.003) {
         setVisible(true);
       }
       if (bonusEvent) {
