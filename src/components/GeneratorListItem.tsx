@@ -55,10 +55,10 @@ export default function GeneratorListItem({
 
   // Static ?
   const generator = useMemo(() => myGenerators.find((x) => x.name === name), [myGenerators, name]);
-  const genUpgrades = useMemo(() => upgrades.filter((x) => x.parameter === name), [name, upgrades]);
+  const genUpgrades = useMemo(() => upgrades.filter((x) => x.parameter === name), [name]);
   const baseVps = useMemo(
     () => getGeneratorVps(name, 1, generator?.ascension ?? 0),
-    [myUpgrades, definition]
+    [generator?.ascension, name, getGeneratorVps]
   );
   const currentLevel = generator?.level ?? 0;
   const ascensionReady = currentLevel >= GEN_MAX_LEVEL;
@@ -70,7 +70,7 @@ export default function GeneratorListItem({
         currentLevel,
         generator?.ascension ?? 0
       ),
-    [ascensionReady]
+    [currentLevel, definition.initialCost, definition.multiplier, generator?.ascension]
   );
   const upgradeCost = useMemo(
     () =>
@@ -171,7 +171,7 @@ const Details = memo(function ({
 }) {
   return (
     <>
-      {formatNumber(upgradeCost)} - {formatNumber(baseVps * buyCount)}/s -{" "}
+      {formatNumber(upgradeCost, 1)} - {formatNumber(baseVps * buyCount, 1)}/s -{" "}
       {formatDuration(upgradeCost / (baseVps * buyCount))} PP
     </>
   );
@@ -202,8 +202,10 @@ const Right = memo(function ({
   const vpsPercent = (vps / currentVps) * 100;
   return (
     <>
-      <p>{formatNumber(vps)}/s</p>
-      <p className="text-xs opacity-75">{vpsPercent.toFixed(1)}%</p>
+      <div className="flex flex-col items-end">
+        <p>{formatNumber(vps, 1)}/s</p>
+        <p className="text-xs opacity-75">{vpsPercent.toFixed(1)}%</p>
+      </div>
       <div className="text-2xl font-bold">{level >= GEN_MAX_LEVEL ? "MAX" : level}</div>
     </>
   );

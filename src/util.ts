@@ -7,23 +7,23 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatNumber(num: number): string {
+export function formatNumber(num: number, places: number = 3): string {
   if (num >= 1e27) {
-    return (num / 1e27).toFixed(3) + "Oc";
+    return (num / 1e27).toFixed(places) + "Oc";
   } else if (num >= 1e24) {
-    return (num / 1e24).toFixed(3) + "Sp";
+    return (num / 1e24).toFixed(places) + "Sp";
   } else if (num >= 1e21) {
-    return (num / 1e21).toFixed(3) + "Sx";
+    return (num / 1e21).toFixed(places) + "Sx";
   } else if (num >= 1e18) {
-    return (num / 1e18).toFixed(3) + "Qn";
+    return (num / 1e18).toFixed(places) + "Qn";
   } else if (num >= 1e15) {
-    return (num / 1e15).toFixed(3) + "Qd";
+    return (num / 1e15).toFixed(places) + "Qd";
   } else if (num >= 1e12) {
-    return (num / 1e12).toFixed(3) + "T";
+    return (num / 1e12).toFixed(places) + "T";
   } else if (num >= 1e9) {
-    return (num / 1e9).toFixed(3) + "B";
+    return (num / 1e9).toFixed(places) + "B";
   } else if (num >= 1e6) {
-    return (num / 1e6).toFixed(3) + "M";
+    return (num / 1e6).toFixed(places) + "M";
   } else if (num >= 1e3) {
     return Number(num.toFixed(0)).toLocaleString();
   }
