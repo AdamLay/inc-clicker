@@ -15,7 +15,7 @@ export default function BuyCountSelector() {
         )}
         onClick={() => setBuyCount(count)}
       >
-        {count}
+        {count < 0 ? "Max" : count}
       </button>
     );
   };
@@ -25,6 +25,7 @@ export default function BuyCountSelector() {
       {btn(5)}
       {btn(10)}
       {btn(25)}
+      {btn(-1)}
     </div>
   );
 }

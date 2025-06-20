@@ -7,7 +7,7 @@ import { orderBy } from "lodash";
 export default function Upgrades() {
   const myUpgrades = useStore(useShallow((state) => state.upgrades));
 
-  const purchased = upgrades.filter((upgrade) => myUpgrades.includes(upgrade.name));
+  //const purchased = upgrades.filter((upgrade) => myUpgrades.includes(upgrade.name));
   const available = upgrades.filter((upgrade) => !myUpgrades.includes(upgrade.name));
 
   return (
@@ -17,7 +17,7 @@ export default function Upgrades() {
           <UpgradeListItem key={upgrade.name} name={upgrade.name} />
         ))}
       </ul>
-      {purchased.length > 0 && (
+      {/* {purchased.length > 0 && (
         <>
           <h1 className="text-sm font-bold text-center mt-4">Purchased</h1>
           <ul className="list bg-base-100 rounded-box shadow-md">
@@ -26,7 +26,7 @@ export default function Upgrades() {
             ))}
           </ul>
         </>
-      )}
+      )} */}
     </div>
   );
 }

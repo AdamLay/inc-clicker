@@ -46,7 +46,7 @@ export function getGeneratorUpgradeCost(
     0
   );
   const levelMult = Math.max(1, Math.pow(2, maxIndex));
-  const ascensionMult = Math.max(1, (ascension + level === GEN_MAX_LEVEL ? 1 : 0) * 1e5);
+  const ascensionMult = level === GEN_MAX_LEVEL ? Math.max(1, ascension * 1e5) : 1;
   return (
     baseCost *
     costMultiplier *

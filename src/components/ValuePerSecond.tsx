@@ -1,9 +1,10 @@
 import { useShallow } from "zustand/react/shallow";
 import { formatNumber } from "../util";
-import { selectValuePerSecond, useStore } from "../store/store";
+import { useStore } from "../store/store";
 
 export default function ValuePerSecond() {
-  const valuePerSecond = useStore(useShallow(selectValuePerSecond));
+  //const valuePerSecond = useStore(useShallow(selectValuePerSecond));
+  const valuePerSecond = useStore(useShallow((state) => state.currentVps));
 
   return (
     <div className="text-xl text-center">

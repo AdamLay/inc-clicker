@@ -1,13 +1,7 @@
 import { useShallow } from "zustand/react/shallow";
 import { GEN_MAX_LEVEL, type Generator } from "../data/generators";
-import { selectValuePerSecond, useStore } from "../store/store";
-import {
-  cn,
-  formatDuration,
-  formatNumber,
-  getGeneratorUpgradeCost,
-  getGeneratorUpgradeCostBulk,
-} from "../util";
+import { useStore } from "../store/store";
+import { cn, formatDuration, formatNumber, getGeneratorUpgradeCost } from "../util";
 import { memo, useMemo } from "react";
 import useStats from "../hooks/useStats";
 import { levelThresholds, upgrades } from "../data/upgrades";
@@ -23,35 +17,25 @@ export default function GeneratorListItem({
   const [
     count,
     countTotal,
+    currentVps,
     myUpgrades,
     addGenerator,
     ascendGenerator,
     myGenerators,
-    buyCount,
-    prestigePoints,
+    buyCountSelection,
   ] = useStore(
     useShallow((state) => [
       state.count,
       state.countTotal,
+      state.currentVps,
       state.upgrades,
       state.addGenerator,
       state.ascendGenerator,
       state.generators,
       state.buyCount,
-      state.prestigePoints,
     ])
   );
   const { getGeneratorVps } = useStats();
-  const currentVps = useMemo(
-    () =>
-      selectValuePerSecond({
-        upgrades: myUpgrades,
-        generators: myGenerators,
-        backgroundMode: null,
-        prestigePoints,
-      }),
-    [myUpgrades, myGenerators, prestigePoints]
-  );
 
   // Static ?
   const generator = useMemo(() => myGenerators.find((x) => x.name === name), [myGenerators, name]);
@@ -72,24 +56,33 @@ export default function GeneratorListItem({
       ),
     [currentLevel, definition.initialCost, definition.multiplier, generator?.ascension]
   );
-  const upgradeCost = useMemo(
-    () =>
-      getGeneratorUpgradeCostBulk(
+
+  const { totalCost: upgradeCost, buyCount } = (() => {
+    let totalCost = 0;
+    let i = 0;
+    const ascension = generator?.ascension ?? 0;
+    const buyMax = buyCountSelection === -1;
+    const maxBuyCount = buyMax ? GEN_MAX_LEVEL : buyCountSelection;
+    while (totalCost < count && i < maxBuyCount && currentLevel + i < GEN_MAX_LEVEL) {
+      const cost = getGeneratorUpgradeCost(
         definition.initialCost,
         definition.multiplier,
-        currentLevel,
-        currentLevel + buyCount,
-        generator?.ascension ?? 0
-      ),
-    [definition, currentLevel, buyCount]
-  );
+        currentLevel + i,
+        ascension
+      );
+      if (buyMax && totalCost + cost > count) break; // Don't exceed count
+      totalCost += cost;
+      i++;
+    }
+    return { totalCost, buyCount: i };
+  })();
 
   const upgradeCount = useMemo(
     () => genUpgrades.filter((x) => myUpgrades.includes(x.name)).length,
     [genUpgrades, myUpgrades]
   );
 
-  const buyEnabled = count >= upgradeCost; // && currentLevel + buyCount <= GEN_MAX_LEVEL;
+  const buyEnabled = buyCount >= 1 && count >= upgradeCost; // && currentLevel + buyCount <= GEN_MAX_LEVEL;
 
   const handleClick = () => {
     if (ascensionReady) {
@@ -120,7 +113,12 @@ export default function GeneratorListItem({
             <p className="text-sm opacity-75">Ascension ready! {formatNumber(upgradeCostOne)}</p>
           ) : (
             <p className="text-xs opacity-75">
-              <Details upgradeCost={upgradeCost} baseVps={baseVps} buyCount={buyCount} />
+              <Details
+                upgradeCost={upgradeCost}
+                baseVps={baseVps}
+                buyCount={buyCount}
+                buyCountSelection={buyCountSelection}
+              />
               <TimeUntilBuy count={count} upgradeCost={upgradeCost} currentVps={currentVps} />
             </p>
           )}
@@ -130,7 +128,6 @@ export default function GeneratorListItem({
           level={generator?.level ?? 0}
           ascension={generator?.ascension ?? 0}
           definition={definition}
-          myUpgrades={myUpgrades}
         />
       </li>
       <PendingUpgrade
@@ -164,27 +161,33 @@ const Details = memo(function ({
   upgradeCost,
   baseVps,
   buyCount,
+  buyCountSelection,
 }: {
   upgradeCost: number;
   baseVps: number;
   buyCount: number;
+  buyCountSelection: number;
 }) {
   return (
     <>
-      {formatNumber(upgradeCost, 1)} - {formatNumber(baseVps * buyCount, 1)}/s -{" "}
+      {buyCountSelection === -1 ? (
+        <span>
+          <span className="text-primary">+{buyCount}</span> ={" "}
+        </span>
+      ) : null}{" "}
+      {formatNumber(upgradeCost, 1)} <span className="text-primary-content">|</span>{" "}
+      {formatNumber(baseVps * buyCount, 1)}/s <span className="text-primary-content">|</span>{" "}
       {formatDuration(upgradeCost / (baseVps * buyCount))} PP
     </>
   );
 });
 
 const Right = memo(function ({
-  myUpgrades,
   definition,
   currentVps,
   level,
   ascension,
 }: {
-  myUpgrades: string[];
   definition: { name: string; level: number; initialCost: number; multiplier: number };
   currentVps: number;
   level: number;
@@ -194,7 +197,7 @@ const Right = memo(function ({
 
   const vps = useMemo(
     () => getGeneratorVps(definition.name, level, ascension),
-    [myUpgrades, definition, level]
+    [getGeneratorVps, definition.name, level, ascension]
   );
 
   if (level <= 0) return null;
@@ -222,7 +225,12 @@ const TimeUntilBuy = function ({
 }) {
   if (count > upgradeCost) return null;
   const secondsUntilBuy = Math.max(0, (upgradeCost - count) / currentVps);
-  return <span> - {formatDuration(secondsUntilBuy)}</span>;
+  return (
+    <span>
+      {" "}
+      <span className="text-primary-content">|</span> {formatDuration(secondsUntilBuy)}
+    </span>
+  );
 };
 
 const PendingUpgrade = memo(function ({

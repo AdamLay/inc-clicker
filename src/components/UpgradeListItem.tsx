@@ -4,34 +4,49 @@ import { cn, formatDuration, formatNumber } from "../util";
 import { upgrades, UpgradeType } from "../data/upgrades";
 import { ArrowUp, Check } from "lucide-react";
 import useStats from "../hooks/useStats";
+import { useMemo } from "react";
 
 export default function UpgradeListItem({ name, icon }: { name: string; icon?: boolean }) {
-  const [count, countTotal, addUpgrade, myUpgrades, generators, prestigePoints] = useStore(
-    useShallow((state) => [
-      state.count,
-      state.countTotal,
-      state.addUpgrade,
-      state.upgrades,
-      state.generators,
-      state.prestigePoints,
-    ])
-  );
-  const currentVps = selectValuePerSecond({
-    upgrades: myUpgrades,
-    generators,
-    backgroundMode: null,
-    prestigePoints,
-  });
+  const [count, countTotal, currentVps, addUpgrade, myUpgrades, generators, prestigePoints] =
+    useStore(
+      useShallow((state) => [
+        state.count,
+        state.countTotal,
+        state.currentVps,
+        state.addUpgrade,
+        state.upgrades,
+        state.generators,
+        state.prestigePoints,
+      ])
+    );
   const { getGeneratorVps } = useStats();
-  const definition = upgrades.find((g) => g.name === name)!;
-  const gen =
-    definition.type === UpgradeType.Generator
-      ? generators.find((g) => g.name === definition.parameter)
-      : null;
-  const bought = myUpgrades.includes(name);
+  const definition = useMemo(() => upgrades.find((g) => g.name === name)!, [name]);
+  const gen = useMemo(
+    () =>
+      definition.type === UpgradeType.Generator
+        ? generators.find((g) => g.name === definition.parameter)
+        : null,
+    [definition.parameter, definition.type, generators]
+  );
+  const bought = useMemo(() => myUpgrades.includes(name), [myUpgrades, name]);
   const buyEnabled = !bought && count >= definition.cost;
   const conditionSatisfied = !definition.condition || definition.condition(gen?.level);
   const show = countTotal >= definition.cost * 0.1 && conditionSatisfied;
+
+  const helperText = useMemo(() => {
+    if (definition.type === UpgradeType.Clicker) {
+      return `Increases click value by ${definition.multiplier}.`;
+    }
+    if (definition.type === UpgradeType.ClickerPrc) {
+      return `Increases click multiplier by ${definition.multiplier.toFixed(1)}x.`;
+    }
+    if (definition.type === UpgradeType.Global) {
+      return "Increases all generators' output.";
+    }
+    if (definition.type === UpgradeType.Generator) {
+      return `Increase ${definition.parameter} output by ${definition.multiplier.toFixed(1)}x`;
+    }
+  }, [definition]);
 
   if (!show && !bought) return null;
 
@@ -64,21 +79,6 @@ export default function UpgradeListItem({ name, icon }: { name: string; icon?: b
       return definition.cost / diff;
     }
     return 0;
-  })();
-
-  const helperText = (() => {
-    if (definition.type === UpgradeType.Clicker) {
-      return `Increases click value by ${definition.multiplier}.`;
-    }
-    if (definition.type === UpgradeType.ClickerPrc) {
-      return `Increases click multiplier by ${definition.multiplier.toFixed(1)}x.`;
-    }
-    if (definition.type === UpgradeType.Global) {
-      return "Increases all generators' output.";
-    }
-    if (definition.type === UpgradeType.Generator) {
-      return `Increase ${definition.parameter} output by ${definition.multiplier.toFixed(1)}x`;
-    }
   })();
 
   const secondsUntilBuy = Math.max(0, (definition.cost - count) / currentVps);

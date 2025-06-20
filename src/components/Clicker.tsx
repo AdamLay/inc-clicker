@@ -1,5 +1,5 @@
 import { useShallow } from "zustand/react/shallow";
-import { selectValuePerSecond, useStore } from "../store/store";
+import { useStore } from "../store/store";
 import { upgrades, UpgradeType } from "../data/upgrades";
 import { formatNumber } from "../util";
 
@@ -9,7 +9,7 @@ export default function Clicker() {
   const [increment, myUpgrades, addClickEvent, bonusEvent] = useStore(
     useShallow((state) => [state.increase, state.upgrades, state.addClickEvent, state.bonusEvent])
   );
-  const vps = useStore(useShallow(selectValuePerSecond));
+  const vps = useStore(useShallow((state) => state.currentVps));
 
   const powerUpgrades = upgrades.filter(
     (x) => x.type === UpgradeType.Clicker && myUpgrades.includes(x.name)
