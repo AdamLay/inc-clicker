@@ -62,8 +62,12 @@ export default function GeneratorListItem({
     let i = 0;
     const ascension = generator?.ascension ?? 0;
     const buyMax = buyCountSelection === -1;
-    const maxBuyCount = buyMax ? GEN_MAX_LEVEL : buyCountSelection;
-    while (totalCost < count && i < maxBuyCount && currentLevel + i < GEN_MAX_LEVEL) {
+    const maxBuyCount = buyMax ? (ascensionReady ? 1 : GEN_MAX_LEVEL) : buyCountSelection;
+    while (
+      totalCost < count &&
+      i < maxBuyCount &&
+      (ascensionReady || currentLevel + i < GEN_MAX_LEVEL)
+    ) {
       const cost = getGeneratorUpgradeCost(
         definition.initialCost,
         definition.multiplier,
