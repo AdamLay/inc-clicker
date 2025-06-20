@@ -170,7 +170,7 @@ export const useStore = create<State>()(
             ],
           })),
         bonusEvent: null,
-        setBonusEvent: (evt: BonusEvent | null) => set(() => ({ bonusEvent: evt })),
+        setBonusEvent: (evt: BonusEvent | null) => withUpdateVps(() => set(() => ({ bonusEvent: evt }))),
         prestigeConfirmOpen: false,
         setPrestigeConfirmOpen: (open: boolean) => set(() => ({ prestigeConfirmOpen: open })),
         setPrestige: (vipp: number) =>
