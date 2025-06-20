@@ -3,6 +3,7 @@ import { upgrades } from "../data/upgrades";
 import { useStore } from "../store/store";
 import UpgradeListItem from "./UpgradeListItem";
 import { orderBy } from "lodash";
+import BuyAllUpgradesButton from "./BuyAllUpgradesButton";
 
 export default function Upgrades() {
   const myUpgrades = useStore(useShallow((state) => state.upgrades));
@@ -12,6 +13,7 @@ export default function Upgrades() {
 
   return (
     <div>
+      <BuyAllUpgradesButton available={available} />
       <ul className="list bg-base-100 rounded-box shadow-md">
         {orderBy(available, "cost").map((upgrade) => (
           <UpgradeListItem key={upgrade.name} name={upgrade.name} />
