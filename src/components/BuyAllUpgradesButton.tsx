@@ -4,11 +4,16 @@ import { useStore } from "../store/store";
 import { sortBy } from "lodash";
 
 export default function BuyAllUpgradesButton({ available }: { available: Upgrade[] }) {
-  const [count, addUpgrade] = useStore(useShallow((state) => [state.count, state.addUpgrade]));
+  const [count, myUpgrades, addUpgrade] = useStore(
+    useShallow((state) => [state.count, state.upgrades, state.addUpgrade])
+  );
 
   const handleClick = () => {
     let amountRemaining = count;
-    const sortedAvailable = sortBy(available, "cost");
+    const sortedAvailable = sortBy(
+      available.filter((x) => !myUpgrades.includes(x.name)),
+      "cost"
+    );
     for (const upgrade of sortedAvailable) {
       if (amountRemaining >= upgrade.cost) {
         addUpgrade(upgrade.name, upgrade.cost);
