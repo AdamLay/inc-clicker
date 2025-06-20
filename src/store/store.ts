@@ -3,6 +3,7 @@ import { persist } from "zustand/middleware";
 import { generators, type GeneratorState } from "../data/generators";
 import { upgrades, UpgradeType } from "../data/upgrades";
 import { getGeneratorBaseVps, getPrestigeMultiplier } from "../util";
+import { uniq } from "lodash";
 
 export type ClickEvent = { value: number; when: number };
 export type BonusEvent = { multiplier: number; duration: number; when: number };
@@ -137,7 +138,7 @@ export const useStore = create<State>()(
         addUpgrade: (name: string, cost: number) =>
           withUpdateVps(() => set((state) => ({
             count: state.count - cost,
-            upgrades: [...state.upgrades, name],
+            upgrades: uniq([...state.upgrades, name]),
           }))),
         buyCount: 1,
         setBuyCount: (amt: number) => set(() => ({ buyCount: amt })),
