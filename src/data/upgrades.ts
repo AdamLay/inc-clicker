@@ -32,8 +32,7 @@ const upgrade = (
 });
 
 export const levelThresholds = [
-  10, 25, 50, 100, 150, 200, 250, 300, 400, 500, 600, 700, 800, 900, 1000, 1500, 2000, 2500, 3000,
-  4000,
+  10, 25, 50, 100, 150, 200, 250, 300, 400, 500, 600, 700, 800, 900, 1000
 ];
 
 const upgradeSet = (
@@ -43,7 +42,7 @@ const upgradeSet = (
   type: UpgradeType,
   parameter?: string,
   costPow: number = 10,
-  upgradeCount: number = 20
+  upgradeCount: number = 15
 ): Upgrade[] => {
   return Array.from({ length: upgradeCount }, (_, i) => {
     return upgrade(
