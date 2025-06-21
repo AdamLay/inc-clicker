@@ -64,7 +64,7 @@ export default function GeneratorListItem({
     const buyMax = buyCountSelection === -1;
     const maxBuyCount = buyMax ? (ascensionReady ? 1 : GEN_MAX_LEVEL) : buyCountSelection;
     while (
-      totalCost < count &&
+      (!buyMax || totalCost < count) &&
       i < maxBuyCount &&
       (ascensionReady || currentLevel + i < GEN_MAX_LEVEL)
     ) {
@@ -174,11 +174,9 @@ const Details = memo(function ({
 }) {
   return (
     <>
-      {buyCountSelection === -1 ? (
-        <span>
-          <span className="text-primary">+{buyCount}</span> ={" "}
-        </span>
-      ) : null}{" "}
+      <span>
+        <span className="text-primary">+{buyCount}</span> ={" "}
+      </span>
       {formatNumber(upgradeCost, 1)} <span className="text-primary-content">|</span>{" "}
       {formatNumber(baseVps * buyCount, 1)}/s <span className="text-primary-content">|</span>{" "}
       {formatDuration(upgradeCost / (baseVps * buyCount))} PP

@@ -158,6 +158,7 @@ export const useStore = create<State>()(
             lifetimeTotal: 0,
             prestigePoints: 0,
             resetConfirmOpen: false,
+            currentVps: 0
           })),
         clicks: 0,
         clickEvents: [],
