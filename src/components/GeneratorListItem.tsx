@@ -74,7 +74,7 @@ export default function GeneratorListItem({
         currentLevel + i,
         ascension
       );
-      if (buyMax && totalCost + cost > count) break; // Don't exceed count
+      if (buyMax && totalCost + cost > count && i > 0) break; // Don't exceed count
       totalCost += cost;
       i++;
     }
@@ -165,7 +165,6 @@ const Details = memo(function ({
   upgradeCost,
   baseVps,
   buyCount,
-  buyCountSelection,
 }: {
   upgradeCost: number;
   baseVps: number;
