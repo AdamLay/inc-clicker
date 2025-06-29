@@ -26,7 +26,7 @@ export default function Clicker() {
 
   const clickValue =
     percentUpgrades.reduce((acc, upgrade) => acc * upgrade.multiplier, clickFlatValue) *
-    (bonusEvent?.multiplier ?? 1);
+    (bonusEvent?.multiplier ?? 2);
 
   const handleClick = () => {
     increment(clickValue);

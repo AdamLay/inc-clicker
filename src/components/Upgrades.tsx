@@ -6,10 +6,19 @@ import { orderBy } from "lodash";
 import BuyAllUpgradesButton from "./BuyAllUpgradesButton";
 
 export default function Upgrades() {
-  const myUpgrades = useStore(useShallow((state) => state.upgrades));
+  const [myUpgrades, myGenerators] = useStore(
+    useShallow((state) => [state.upgrades, state.generators])
+  );
 
   //const purchased = upgrades.filter((upgrade) => myUpgrades.includes(upgrade.name));
-  const available = upgrades.filter((upgrade) => !myUpgrades.includes(upgrade.name));
+  const available = upgrades.filter((upgrade) => {
+    if (myUpgrades.includes(upgrade.name)) return false;
+    if (upgrade.condition) {
+      const generator = myGenerators.find((g) => g.name === upgrade.parameter);
+      return generator && upgrade.condition(generator?.level);
+    }
+    return true;
+  });
 
   return (
     <div>
