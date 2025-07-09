@@ -8,33 +8,34 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatNumber(num: number, places: number = 3): string {
-  if (num >= 1e42) {
-    return (num / 1e42).toFixed(places) + "Tre";
-  } else if (num >= 1e39) {
-    return (num / 1e39).toFixed(places) + "Duo";
-  } else if (num >= 1e36) {
-    return (num / 1e36).toFixed(places) + "Und";
-  } else if (num >= 1e33) {
-    return (num / 1e33).toFixed(places) + "De";
-  } else if (num >= 1e30) {
-    return (num / 1e30).toFixed(places) + "No";
-  } else if (num >= 1e27) {
-    return (num / 1e27).toFixed(places) + "Oc";
-  } else if (num >= 1e24) {
-    return (num / 1e24).toFixed(places) + "Sp";
-  } else if (num >= 1e21) {
-    return (num / 1e21).toFixed(places) + "Sx";
-  } else if (num >= 1e18) {
-    return (num / 1e18).toFixed(places) + "Qn";
-  } else if (num >= 1e15) {
-    return (num / 1e15).toFixed(places) + "Qd";
-  } else if (num >= 1e12) {
-    return (num / 1e12).toFixed(places) + "T";
-  } else if (num >= 1e9) {
-    return (num / 1e9).toFixed(places) + "B";
-  } else if (num >= 1e6) {
-    return (num / 1e6).toFixed(places) + "M";
-  } else if (num >= 1e3) {
+  const tiers = [
+    { value: 1e63, suffix: "Vg" }, // Vigintillion
+    { value: 1e60, suffix: "NvD" }, // Novemdecillion
+    { value: 1e57, suffix: "OcD" }, // Octodecillion
+    { value: 1e54, suffix: "SpD" }, // Septendecillion
+    { value: 1e51, suffix: "SxD" }, // Sexdecillion
+    { value: 1e48, suffix: "QiD" }, // Quindecillion
+    { value: 1e45, suffix: "QuD" }, // Quattuordecillion
+    { value: 1e42, suffix: "TrD" }, // Tredecillion
+    { value: 1e39, suffix: "DdD" }, // Duodecillion
+    { value: 1e36, suffix: "UdD" }, // Undecillion
+    { value: 1e33, suffix: "Dc" }, // Decillion
+    { value: 1e30, suffix: "No" }, // Nonillion
+    { value: 1e27, suffix: "Oc" }, // Octillion
+    { value: 1e24, suffix: "Sp" }, // Septillion
+    { value: 1e21, suffix: "Sx" }, // Sextillion
+    { value: 1e18, suffix: "Qi" }, // Quintillion
+    { value: 1e15, suffix: "Qa" }, // Quadrillion
+    { value: 1e12, suffix: "T" }, // Trillion
+    { value: 1e9, suffix: "B" }, // Billion
+    { value: 1e6, suffix: "M" }, // Million
+  ];
+  for (const tier of tiers) {
+    if (num >= tier.value) {
+      return (num / tier.value).toFixed(places) + tier.suffix;
+    }
+  }
+  if (num >= 1e3) {
     return Number(num.toFixed(0)).toLocaleString();
   }
   return num?.toFixed(1) ?? "0";
