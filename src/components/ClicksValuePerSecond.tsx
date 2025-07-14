@@ -9,9 +9,7 @@ export default function ClicksValuePerSecond() {
 
   useEffect(() => {
     const updateVps = () => {
-      const values = clickEvents
-        .filter((x) => x.when >= new Date().getTime() - 1000)
-        .map((x) => x.value);
+      const values = clickEvents.filter((x) => x.when >= new Date().getTime() - 1000).map((x) => x.value);
       setVps(values.reduce((acc, value) => acc + value, 0));
     };
     updateVps();
@@ -22,7 +20,7 @@ export default function ClicksValuePerSecond() {
   return (
     <>
       <div className="text-xl text-center">
-        <span className="text-sm opacity-75">Clicks</span> {formatNumber(vps)}/s
+        <span className="text-sm opacity-75">Clicks</span> {formatNumber(vps, 1)}/s
       </div>
     </>
   );

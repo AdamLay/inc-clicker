@@ -17,6 +17,7 @@ import RandomEventButton from "./components/RandomEventButton";
 import PrestigeConfirmationModal from "./components/PrestigeConfirmationModal";
 import { useStore } from "./store/store";
 import { useShallow } from "zustand/react/shallow";
+import Interest from "./components/Interest";
 //import StatsGraphs from "./components/graphs/StatsGraphs";
 
 export default function App() {
@@ -40,6 +41,7 @@ export default function App() {
                 <div className="grid grid-cols-2 my-2">
                   <ValuePerSecond />
                   <ClicksValuePerSecond />
+                  <Interest />
                 </div>
                 <Clicker />
                 <RandomEventButton />
