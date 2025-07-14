@@ -7,7 +7,9 @@ import { upgrades, UpgradeType } from "../data/upgrades";
 interface InterestProps {}
 
 export default function Interest({}: InterestProps) {
-  const [increment, myUpgrades] = useStore(useShallow((state) => [state.increase, state.upgrades]));
+  const [increment, myUpgrades, backgroundMode] = useStore(
+    useShallow((state) => [state.increase, state.upgrades, state.backgroundMode])
+  );
   const currentCount = useStore(useShallow((state) => state.count));
   const [timerStarted, setTimerStarted] = useState(0);
   const [interestAmt, setInterestAmount] = useState(0);
@@ -23,7 +25,7 @@ export default function Interest({}: InterestProps) {
   if (!timerStarted || new Date().getTime() - timerStarted > 10_000) {
     //Snapshot current count amount into state
     setInterestAmount(currentCount * interestPrc);
-    if (timerStarted) {
+    if (timerStarted && !backgroundMode) {
       increment(interestAmt);
     }
     setTimerStarted(new Date().getTime()); // Reset the timer
