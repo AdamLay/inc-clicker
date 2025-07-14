@@ -7,18 +7,17 @@ import useStats from "../hooks/useStats";
 import { useMemo } from "react";
 
 export default function UpgradeListItem({ name, icon }: { name: string; icon?: boolean }) {
-  const [count, countTotal, currentVps, addUpgrade, myUpgrades, generators, prestigePoints] =
-    useStore(
-      useShallow((state) => [
-        state.count,
-        state.countTotal,
-        state.currentVps,
-        state.addUpgrade,
-        state.upgrades,
-        state.generators,
-        state.prestigePoints,
-      ])
-    );
+  const [count, countTotal, currentVps, addUpgrade, myUpgrades, generators, prestigePoints] = useStore(
+    useShallow((state) => [
+      state.count,
+      state.countTotal,
+      state.currentVps,
+      state.addUpgrade,
+      state.upgrades,
+      state.generators,
+      state.prestigePoints,
+    ])
+  );
   const { getGeneratorVps } = useStats();
   const definition = useMemo(() => upgrades.find((g) => g.name === name)!, [name]);
   const gen = useMemo(
@@ -43,6 +42,9 @@ export default function UpgradeListItem({ name, icon }: { name: string; icon?: b
     if (definition.type === UpgradeType.Global) {
       return "Increases all generators' output.";
     }
+    if (definition.type === UpgradeType.Interest) {
+      return "Returns a percentage of your current balance every 10 seconds.";
+    }
     if (definition.type === UpgradeType.Generator) {
       return `Increase ${definition.parameter} output by ${definition.multiplier.toFixed(1)}x`;
     }
@@ -63,12 +65,10 @@ export default function UpgradeListItem({ name, icon }: { name: string; icon?: b
       return definition.cost / diff;
     }
     if (definition.type === UpgradeType.Generator) {
-      const newGenVps = getGeneratorVps(
-        definition.parameter!,
-        gen?.level ?? 0,
-        gen?.ascension ?? 0,
-        [...myUpgrades, name]
-      );
+      const newGenVps = getGeneratorVps(definition.parameter!, gen?.level ?? 0, gen?.ascension ?? 0, [
+        ...myUpgrades,
+        name,
+      ]);
       const currentGenVps = getGeneratorVps(
         definition.parameter!,
         gen?.level ?? 0,
