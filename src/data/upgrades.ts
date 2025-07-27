@@ -32,7 +32,11 @@ const upgrade = (
   condition,
 });
 
-export const levelThresholds = [10, 25, 50, 100, 150, 200, 250, 300, 400, 500, 600, 700, 800, 900, 1000];
+export const levelThresholds = [
+  10, 25, 50, 100, 150, 200, 250, 300, 400, 500, 600, 700, 800, 900, 1000,
+];
+
+export const GEN_MAX_UPGRADE = 15;
 
 const upgradeSet = (
   name: string,
@@ -41,7 +45,7 @@ const upgradeSet = (
   type: UpgradeType,
   parameter?: string,
   costPow: number = 10,
-  upgradeCount: number = 15
+  upgradeCount: number = GEN_MAX_UPGRADE
 ): Upgrade[] => {
   return Array.from({ length: upgradeCount }, (_, i) => {
     return upgrade(
@@ -73,10 +77,38 @@ export const upgrades: Upgrade[] = [
   ...upgradeSet("Manufacturer", 5e4, generatorMult, UpgradeType.Generator, "Manufacturer", 11),
   ...upgradeSet("Atomiser", 5e5, generatorMult, UpgradeType.Generator, "Atomiser", 12),
   ...upgradeSet("Collider", 5e6, generatorMult, UpgradeType.Generator, "Collider", 13),
-  ...upgradeSet("Quantum Generator", 5e7, generatorMult, UpgradeType.Generator, "Quantum Generator", 14),
-  ...upgradeSet("Dark Matter Reactor", 5e8, generatorMult, UpgradeType.Generator, "Dark Matter Reactor", 15),
-  ...upgradeSet("Singularity Engine", 5e9, generatorMult, UpgradeType.Generator, "Singularity Engine", 16),
-  ...upgradeSet("Black Hole Device", 5e11, generatorMult, UpgradeType.Generator, "Black Hole Device", 17),
+  ...upgradeSet(
+    "Quantum Generator",
+    5e7,
+    generatorMult,
+    UpgradeType.Generator,
+    "Quantum Generator",
+    14
+  ),
+  ...upgradeSet(
+    "Dark Matter Reactor",
+    5e8,
+    generatorMult,
+    UpgradeType.Generator,
+    "Dark Matter Reactor",
+    15
+  ),
+  ...upgradeSet(
+    "Singularity Engine",
+    5e9,
+    generatorMult,
+    UpgradeType.Generator,
+    "Singularity Engine",
+    16
+  ),
+  ...upgradeSet(
+    "Black Hole Device",
+    5e11,
+    generatorMult,
+    UpgradeType.Generator,
+    "Black Hole Device",
+    17
+  ),
   ...upgradeSet("Cosmic Forge", 5e13, generatorMult, UpgradeType.Generator, "Cosmic Forge", 18),
   ...upgradeSet(
     "Intergalactic Propagator",
@@ -86,7 +118,14 @@ export const upgrades: Upgrade[] = [
     "Intergalactic Propagator",
     19
   ),
-  ...upgradeSet("Multiversal Conduit", 1e18, generatorMult, UpgradeType.Generator, "Multiversal Conduit", 20),
+  ...upgradeSet(
+    "Multiversal Conduit",
+    1e18,
+    generatorMult,
+    UpgradeType.Generator,
+    "Multiversal Conduit",
+    20
+  ),
   ...upgradeSet(
     "Transdimensional Nexus",
     1e20,

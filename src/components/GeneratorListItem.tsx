@@ -4,7 +4,7 @@ import { useStore } from "../store/store";
 import { cn, formatDuration, formatNumber, getGeneratorUpgradeCost } from "../util";
 import { memo, useMemo } from "react";
 import useStats from "../hooks/useStats";
-import { levelThresholds, upgrades } from "../data/upgrades";
+import { GEN_MAX_UPGRADE, levelThresholds, upgrades } from "../data/upgrades";
 import UpgradeListItem from "./UpgradeListItem";
 
 export default function GeneratorListItem({
@@ -45,7 +45,6 @@ export default function GeneratorListItem({
     [generator?.ascension, name, getGeneratorVps]
   );
   const currentLevel = generator?.level ?? 0;
-  const ascensionReady = currentLevel >= GEN_MAX_LEVEL;
   const upgradeCostOne = useMemo(
     () =>
       getGeneratorUpgradeCost(
@@ -56,6 +55,14 @@ export default function GeneratorListItem({
       ),
     [currentLevel, definition.initialCost, definition.multiplier, generator?.ascension]
   );
+
+  const upgradeCount = useMemo(
+    () => genUpgrades.filter((x) => myUpgrades.includes(x.name)).length,
+    [genUpgrades, myUpgrades]
+  );
+
+  const isMaxUpgrade = GEN_MAX_UPGRADE === upgradeCount;
+  const ascensionReady = currentLevel >= GEN_MAX_LEVEL && isMaxUpgrade;
 
   const { totalCost: upgradeCost, buyCount } = (() => {
     let totalCost = 0;
@@ -80,11 +87,6 @@ export default function GeneratorListItem({
     }
     return { totalCost, buyCount: i };
   })();
-
-  const upgradeCount = useMemo(
-    () => genUpgrades.filter((x) => myUpgrades.includes(x.name)).length,
-    [genUpgrades, myUpgrades]
-  );
 
   const buyEnabled = buyCount >= 1 && count >= upgradeCost; // && currentLevel + buyCount <= GEN_MAX_LEVEL;
 
