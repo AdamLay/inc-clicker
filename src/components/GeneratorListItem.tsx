@@ -177,8 +177,10 @@ const Details = memo(function ({
         <span className="text-primary">+{buyCount}</span> ={" "}
       </span>
       {formatNumber(upgradeCost, 1)} <span className="text-primary-content">|</span>{" "}
-      {formatNumber(baseVps * buyCount, 1)}/s <span className="text-primary-content">|</span>{" "}
-      {formatDuration(upgradeCost / (baseVps * buyCount))} PP
+      {/* {formatNumber(baseVps * buyCount, 1)}/s <span className="text-primary-content">|</span>{" "} */}
+      <span className="text-secondary">
+        {formatDuration(upgradeCost / (baseVps * buyCount))} PP
+      </span>
     </>
   );
 });
