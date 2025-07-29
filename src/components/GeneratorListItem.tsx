@@ -7,13 +7,7 @@ import useStats from "../hooks/useStats";
 import { GEN_MAX_UPGRADE, levelThresholds, upgrades } from "../data/upgrades";
 import UpgradeListItem from "./UpgradeListItem";
 
-export default function GeneratorListItem({
-  name,
-  definition,
-}: {
-  name: string;
-  definition: Generator;
-}) {
+export default function GeneratorListItem({ name, definition }: { name: string; definition: Generator }) {
   const [
     count,
     countTotal,
@@ -107,9 +101,7 @@ export default function GeneratorListItem({
         className={cn(
           "list-row flex items-center select-none gap-2",
           buyEnabled ? "cursor-pointer hover:bg-base-200" : "cursor-not-allowed opacity-50",
-          countTotal < definition.initialCost * 0.1
-            ? "blur-[2px] opacity-25 backdrop-brightness-50"
-            : null
+          countTotal < definition.initialCost * 0.1 ? "blur-[2px] opacity-25 backdrop-brightness-50" : null
         )}
         onClick={buyEnabled ? handleClick : undefined}
       >
@@ -134,7 +126,7 @@ export default function GeneratorListItem({
         </div>
         <Right
           currentVps={currentVps}
-          level={generator?.level ?? 0}
+          level={generator?.level ?? null}
           ascension={generator?.ascension ?? 0}
           definition={definition}
         />
@@ -183,9 +175,7 @@ const Details = memo(function ({
       </span>
       {formatNumber(upgradeCost, 1)} <span className="text-primary-content">|</span>{" "}
       {/* {formatNumber(baseVps * buyCount, 1)}/s <span className="text-primary-content">|</span>{" "} */}
-      <span className="text-secondary">
-        {formatDuration(upgradeCost / (baseVps * buyCount))} PP
-      </span>
+      <span className="text-secondary">{formatDuration(upgradeCost / (baseVps * buyCount))} PP</span>
     </>
   );
 });
@@ -198,17 +188,17 @@ const Right = memo(function ({
 }: {
   definition: { name: string; level: number; initialCost: number; multiplier: number };
   currentVps: number;
-  level: number;
+  level: number | null;
   ascension: number;
 }) {
   const { getGeneratorVps } = useStats();
 
   const vps = useMemo(
-    () => getGeneratorVps(definition.name, level, ascension),
+    () => getGeneratorVps(definition.name, level ?? 0, ascension),
     [getGeneratorVps, definition.name, level, ascension]
   );
 
-  if (level <= 0) return null;
+  if (level === null) return null;
 
   const vpsPercent = (vps / currentVps) * 100;
   return (
@@ -252,10 +242,7 @@ const PendingUpgrade = memo(function ({
   myUpgrades: string[];
   genUpgrades: { name: string }[];
 }) {
-  const maxLevel = levelThresholds.reduce(
-    (acc, threshold, idx) => (level >= threshold ? idx + 1 : acc),
-    0
-  );
+  const maxLevel = levelThresholds.reduce((acc, threshold, idx) => (level >= threshold ? idx + 1 : acc), 0);
 
   const pendingUpgrade = (() => {
     if (maxLevel <= upgradeCount) return null;

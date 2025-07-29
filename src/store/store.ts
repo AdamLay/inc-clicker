@@ -85,14 +85,10 @@ export const selectValuePerSecond = (state: {
   return totalVps * (isValid ? 0.1 : 0);
 };
 
-
-
 export const useStore = create<State>()(
   persist(
     (set, get) => {
-
       const withUpdateVps = (fn: () => void) => {
-
         fn();
         set((state) => {
           const vps = selectValuePerSecond(state);
@@ -114,32 +110,38 @@ export const useStore = create<State>()(
           })),
         generators: [],
         addGenerator: (generatorName: string, cost: number, count: number = 1) =>
-          withUpdateVps(() => set((state) => {
-            const exists = state.generators.some((g) => g.name === generatorName);
-            return {
-              count: state.count - cost,
-              generators: exists
-                ? state.generators.map((g) =>
-                  g.name === generatorName
-                    ? { ...g, level: g.level + count, ascension: g.ascension ?? 0 }
-                    : g
-                )
-                : [...state.generators, { name: generatorName, level: count, ascension: 0 }],
-            };
-          })),
+          withUpdateVps(() =>
+            set((state) => {
+              const exists = state.generators.some((g) => g.name === generatorName);
+              return {
+                count: state.count - cost,
+                generators: exists
+                  ? state.generators.map((g) =>
+                      g.name === generatorName
+                        ? { ...g, level: g.level + count, ascension: g.ascension ?? 0 }
+                        : g
+                    )
+                  : [...state.generators, { name: generatorName, level: count, ascension: 0 }],
+              };
+            })
+          ),
         ascendGenerator: (name: string, cost: number) =>
-          withUpdateVps(() => set((state) => ({
-            count: state.count - cost,
-            generators: state.generators.map((g) =>
-              g.name === name ? { ...g, level: 1, ascension: (g.ascension ?? 0) + 1 } : g
-            ),
-          }))),
+          withUpdateVps(() =>
+            set((state) => ({
+              count: state.count - cost,
+              generators: state.generators.map((g) =>
+                g.name === name ? { ...g, level: 0, ascension: (g.ascension ?? 0) + 1 } : g
+              ),
+            }))
+          ),
         upgrades: [],
         addUpgrade: (name: string, cost: number) =>
-          withUpdateVps(() => set((state) => ({
-            count: state.count - cost,
-            upgrades: uniq([...state.upgrades, name]),
-          }))),
+          withUpdateVps(() =>
+            set((state) => ({
+              count: state.count - cost,
+              upgrades: uniq([...state.upgrades, name]),
+            }))
+          ),
         buyCount: 1,
         setBuyCount: (amt: number) => set(() => ({ buyCount: amt })),
         backgroundMode: null,
@@ -158,7 +160,7 @@ export const useStore = create<State>()(
             lifetimeTotal: 0,
             prestigePoints: 0,
             resetConfirmOpen: false,
-            currentVps: 0
+            currentVps: 0,
           })),
         clicks: 0,
         clickEvents: [],
@@ -176,14 +178,16 @@ export const useStore = create<State>()(
         prestigeConfirmOpen: false,
         setPrestigeConfirmOpen: (open: boolean) => set(() => ({ prestigeConfirmOpen: open })),
         setPrestige: (vipp: number) =>
-          withUpdateVps(() => set((state) => ({
-            count: 0,
-            countTotal: 0,
-            prestigePoints: state.prestigePoints + vipp,
-            generators: [],
-            upgrades: [],
-            buyCount: 1,
-          }))),
+          withUpdateVps(() =>
+            set((state) => ({
+              count: 0,
+              countTotal: 0,
+              prestigePoints: state.prestigePoints + vipp,
+              generators: [],
+              upgrades: [],
+              buyCount: 1,
+            }))
+          ),
 
         // Save/load game functionality
         saveGameToFile: () => {
@@ -246,10 +250,9 @@ export const useStore = create<State>()(
           }
         },
 
-        setCount_Debug: (amt: number) =>
-          set(() => ({ count: amt, countTotal: amt, lifetimeTotal: amt })),
+        setCount_Debug: (amt: number) => set(() => ({ count: amt, countTotal: amt, lifetimeTotal: amt })),
         setPrestige_Debug: (amt: number) => set(() => ({ prestigePoints: amt })),
-      }
+      };
     },
     {
       name: "inc-clicker-storage", // unique name for localStorage key

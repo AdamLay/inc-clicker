@@ -3,16 +3,11 @@ import { useStore } from "../store/store";
 import { cn } from "../util";
 
 export default function BuyCountSelector() {
-  const [buyCount, setBuyCount] = useStore(
-    useShallow((state) => [state.buyCount, state.setBuyCount])
-  );
+  const [buyCount, setBuyCount] = useStore(useShallow((state) => [state.buyCount, state.setBuyCount]));
   const btn = (count: number) => {
     return (
       <button
-        className={cn(
-          "flex-1 btn btn-sm join-item",
-          buyCount === count ? "btn-primary" : "btn-outline"
-        )}
+        className={cn("flex-1 btn btn-sm join-item", buyCount === count ? "btn-primary" : "btn-outline")}
         onClick={() => setBuyCount(count)}
       >
         {count < 0 ? "Max" : count}
