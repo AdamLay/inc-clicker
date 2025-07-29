@@ -18,6 +18,7 @@ export default function Interest({}: InterestProps) {
   const purchasedInterestUpgrades = interestUpgrades.filter((u) => myUpgrades.includes(u.name));
 
   const interestPrc = purchasedInterestUpgrades.reduce((acc, upgrade) => acc + upgrade.multiplier, 0);
+  if (!interestPrc) return null;
 
   // No need for useEffect, since we can just update on each render triggered by the store count change
 
@@ -54,8 +55,6 @@ export default function Interest({}: InterestProps) {
       />
     </svg>
   );
-
-  if (!interestPrc) return null;
 
   return (
     <div className="flex gap-2 items-center justify-center col-span-2">
