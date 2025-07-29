@@ -11,22 +11,17 @@ export default function Clicker() {
   );
   const vps = useStore(useShallow((state) => state.currentVps));
 
-  const powerUpgrades = upgrades.filter(
-    (x) => x.type === UpgradeType.Clicker && myUpgrades.includes(x.name)
-  );
+  const powerUpgrades = upgrades.filter((x) => x.type === UpgradeType.Clicker && myUpgrades.includes(x.name));
   const percentUpgrades = upgrades.filter(
     (x) => x.type === UpgradeType.ClickerPrc && myUpgrades.includes(x.name)
   );
 
-  const clickBase = 1 + vps * 0.1;
-  const clickFlatValue = powerUpgrades.reduce(
-    (acc, upgrade) => acc + upgrade.multiplier,
-    clickBase
-  );
+  const clickBase = 2 + vps * 0.1;
+  const clickFlatValue = powerUpgrades.reduce((acc, upgrade) => acc + upgrade.multiplier, clickBase);
 
   const clickValue =
     percentUpgrades.reduce((acc, upgrade) => acc * upgrade.multiplier, clickFlatValue) *
-    (bonusEvent?.multiplier ?? 2);
+    (bonusEvent?.multiplier ?? 1);
 
   const handleClick = () => {
     increment(clickValue);
