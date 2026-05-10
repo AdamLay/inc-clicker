@@ -1,5 +1,5 @@
 import { useStore } from "../store/store";
-import { formatNumber } from "../util";
+import { formatNumber, formatNumberSplit } from "../util";
 
 export default function CurrentValue() {
   const value = useStore((state) => state.count);
@@ -8,7 +8,7 @@ export default function CurrentValue() {
 
   return (
     <div className="flex items-center justify-center h-full">
-      <div className="text-6xl font-bold">{formatNumber(value)}</div>
+      <div className="text-5xl font-bold">{formatNumberSplit(value)}</div>
     </div>
   );
 }

@@ -1,23 +1,24 @@
+import { useState } from "react";
+import { useShallow } from "zustand/react/shallow";
+import BuyCountSelector from "./components/BuyCountSelector";
+import Clicker from "./components/Clicker";
+import ClicksValuePerSecond from "./components/ClicksValuePerSecond";
 import CurrentValue from "./components/CurrentValue";
 import Generators from "./components/Generators";
+import HelpDialog from "./components/HelpDialog";
+import Interest from "./components/Interest";
+import Menu from "./components/Menu";
+import NavBar from "./components/NavBar";
+import PrestigeConfirmationModal from "./components/PrestigeConfirmationModal";
+import RandomEventButton from "./components/RandomEventButton";
+import ResetConfirmationModal from "./components/ResetConfirmationModal";
 import Upgrades from "./components/Upgrades";
-import Clicker from "./components/Clicker";
-import useGameLoop from "./hooks/useGameLoop";
 import ValuePerSecond from "./components/ValuePerSecond";
 import useBackgroundGeneration from "./hooks/useBackgroundGeneration";
 import useDebugCheats from "./hooks/useDebugCheats";
-import { useState } from "react";
-import { cn } from "./util";
-import NavBar from "./components/NavBar";
-import HelpDialog from "./components/HelpDialog";
-import Menu from "./components/Menu";
-import ResetConfirmationModal from "./components/ResetConfirmationModal";
-import ClicksValuePerSecond from "./components/ClicksValuePerSecond";
-import RandomEventButton from "./components/RandomEventButton";
-import PrestigeConfirmationModal from "./components/PrestigeConfirmationModal";
+import useGameLoop from "./hooks/useGameLoop";
 import { useStore } from "./store/store";
-import { useShallow } from "zustand/react/shallow";
-import Interest from "./components/Interest";
+import { cn } from "./util";
 //import StatsGraphs from "./components/graphs/StatsGraphs";
 
 export default function App() {
@@ -43,8 +44,7 @@ export default function App() {
                   <ClicksValuePerSecond />
                   <Interest />
                 </div>
-                <Clicker />
-                <RandomEventButton />
+
                 <div role="tablist" className="tabs tabs-lift mt-2 md:hidden">
                   <a
                     role="tab"
@@ -68,6 +68,13 @@ export default function App() {
                 </div>
                 <div className={cn("hidden md:block", { block: tab === 1 })}>
                   <Upgrades />
+                </div>
+              </div>
+              <div className="fixed left-0 right-0 bottom-0 p-2 bg-base-100">
+                <BuyCountSelector />
+                <div className="flex flex-row items-center gap-2 mt-2">
+                  <Clicker />
+                  <RandomEventButton />
                 </div>
               </div>
             </div>

@@ -1,23 +1,28 @@
 import { useShallow } from "zustand/react/shallow";
-import { useStore } from "../store/store";
 import { upgrades, UpgradeType } from "../data/upgrades";
+import { useStore } from "../store/store";
 import { formatNumber } from "../util";
 
 //const isLocal = window.location.host.startsWith("local");
 
 export default function Clicker() {
   const [increment, myUpgrades, addClickEvent, bonusEvent] = useStore(
-    useShallow((state) => [state.increase, state.upgrades, state.addClickEvent, state.bonusEvent])
+    useShallow((state) => [state.increase, state.upgrades, state.addClickEvent, state.bonusEvent]),
   );
   const vps = useStore(useShallow((state) => state.currentVps));
 
-  const powerUpgrades = upgrades.filter((x) => x.type === UpgradeType.Clicker && myUpgrades.includes(x.name));
+  const powerUpgrades = upgrades.filter(
+    (x) => x.type === UpgradeType.Clicker && myUpgrades.includes(x.name),
+  );
   const percentUpgrades = upgrades.filter(
-    (x) => x.type === UpgradeType.ClickerPrc && myUpgrades.includes(x.name)
+    (x) => x.type === UpgradeType.ClickerPrc && myUpgrades.includes(x.name),
   );
 
   const clickBase = 2 + vps * 0.1;
-  const clickFlatValue = powerUpgrades.reduce((acc, upgrade) => acc + upgrade.multiplier, clickBase);
+  const clickFlatValue = powerUpgrades.reduce(
+    (acc, upgrade) => acc + upgrade.multiplier,
+    clickBase,
+  );
 
   const clickValue =
     percentUpgrades.reduce((acc, upgrade) => acc * upgrade.multiplier, clickFlatValue) *
@@ -29,7 +34,7 @@ export default function Clicker() {
   };
 
   return (
-    <button className="btn py-12" onClick={handleClick}>
+    <button className="btn py-10 flex-grow-1" onClick={handleClick}>
       <p className="flex items-center gap-2">
         <span className="text-lg">Increment {formatNumber(clickValue)}</span>
         <span className="text-xs">(lvl {powerUpgrades.length + percentUpgrades.length})</span>

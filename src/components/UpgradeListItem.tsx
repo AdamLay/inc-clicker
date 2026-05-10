@@ -1,23 +1,34 @@
+import { ArrowUp, Check } from "lucide-react";
+import { useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
+import { upgrades, UpgradeType } from "../data/upgrades";
+import useStats from "../hooks/useStats";
 import { selectValuePerSecond, useStore } from "../store/store";
 import { cn, formatDuration, formatNumber } from "../util";
-import { upgrades, UpgradeType } from "../data/upgrades";
-import { ArrowUp, Check } from "lucide-react";
-import useStats from "../hooks/useStats";
-import { useMemo } from "react";
 
-export default function UpgradeListItem({ name, icon }: { name: string; icon?: boolean }) {
-  const [count, countTotal, currentVps, addUpgrade, myUpgrades, generators, prestigePoints] = useStore(
-    useShallow((state) => [
-      state.count,
-      state.countTotal,
-      state.currentVps,
-      state.addUpgrade,
-      state.upgrades,
-      state.generators,
-      state.prestigePoints,
-    ])
-  );
+export default function UpgradeListItem({
+  name,
+  icon,
+  compact,
+  forceShow,
+}: {
+  name: string;
+  icon?: boolean;
+  compact?: boolean;
+  forceShow?: boolean;
+}) {
+  const [count, countTotal, currentVps, addUpgrade, myUpgrades, generators, prestigePoints] =
+    useStore(
+      useShallow((state) => [
+        state.count,
+        state.countTotal,
+        state.currentVps,
+        state.addUpgrade,
+        state.upgrades,
+        state.generators,
+        state.prestigePoints,
+      ]),
+    );
   const { getGeneratorVps } = useStats();
   const definition = useMemo(() => upgrades.find((g) => g.name === name)!, [name]);
   const gen = useMemo(
@@ -25,12 +36,12 @@ export default function UpgradeListItem({ name, icon }: { name: string; icon?: b
       definition.type === UpgradeType.Generator
         ? generators.find((g) => g.name === definition.parameter)
         : null,
-    [definition.parameter, definition.type, generators]
+    [definition.parameter, definition.type, generators],
   );
   const bought = useMemo(() => myUpgrades.includes(name), [myUpgrades, name]);
   const buyEnabled = !bought && count >= definition.cost;
   const conditionSatisfied = !definition.condition || definition.condition(gen?.level);
-  const show = countTotal >= definition.cost * 0.1 && conditionSatisfied;
+  const show = forceShow || (countTotal >= definition.cost * 0.1 && conditionSatisfied);
 
   const helperText = useMemo(() => {
     if (definition.type === UpgradeType.Clicker) {
@@ -46,7 +57,7 @@ export default function UpgradeListItem({ name, icon }: { name: string; icon?: b
       return "Returns a percentage of your current balance every 10 seconds.";
     }
     if (definition.type === UpgradeType.Generator) {
-      return `Increase ${definition.parameter} output by ${definition.multiplier.toFixed(1)}x`;
+      return `Increase output by ${definition.multiplier.toFixed(1)}x`;
     }
   }, [definition]);
 
@@ -65,15 +76,17 @@ export default function UpgradeListItem({ name, icon }: { name: string; icon?: b
       return definition.cost / diff;
     }
     if (definition.type === UpgradeType.Generator) {
-      const newGenVps = getGeneratorVps(definition.parameter!, gen?.level ?? 0, gen?.ascension ?? 0, [
-        ...myUpgrades,
-        name,
-      ]);
+      const newGenVps = getGeneratorVps(
+        definition.parameter!,
+        gen?.level ?? 0,
+        gen?.ascension ?? 0,
+        [...myUpgrades, name],
+      );
       const currentGenVps = getGeneratorVps(
         definition.parameter!,
         gen?.level ?? 0,
         gen?.ascension ?? 0,
-        myUpgrades
+        myUpgrades,
       );
       const diff = newGenVps - currentGenVps;
       return definition.cost / diff;
@@ -86,16 +99,29 @@ export default function UpgradeListItem({ name, icon }: { name: string; icon?: b
   return (
     <li
       className={cn(
-        "list-row flex items-center select-none",
-        buyEnabled ? "cursor-pointer hover:bg-base-200" : "cursor-not-allowed opacity-50"
+        "flex items-center select-none",
+        buyEnabled ? "cursor-pointer hover:bg-base-200" : "cursor-not-allowed opacity-50",
+        compact ? "p-2 px-0" : "list-row",
       )}
-      onClick={buyEnabled ? () => addUpgrade(name, definition.cost) : undefined}
+      onClick={
+        buyEnabled
+          ? (e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              addUpgrade(name, definition.cost);
+            }
+          : undefined
+      }
     >
       <div className="text-primary">{icon && <ArrowUp />}</div>
-      <div className="flex-1">
-        <p>
-          {name} - <span className="text-xs">{helperText}</span>
-        </p>
+      <div className={cn("flex-1", compact ? "flex justify-between" : "")}>
+        {compact ? (
+          <span className="text-xs">{helperText}</span>
+        ) : (
+          <p>
+            {name} - <span className="text-xs">{helperText}</span>
+          </p>
+        )}
         <div className="text-xs font-semibold opacity-60">
           {formatNumber(definition.cost)} - {formatDuration(pp)} PP
           {secondsUntilBuy > 0 && <> - {formatDuration(secondsUntilBuy)}</>}

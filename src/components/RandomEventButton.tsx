@@ -1,11 +1,11 @@
+import { useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { useStore } from "../store/store";
-import { useEffect, useState } from "react";
 import { formatDuration } from "../util";
 
 export default function RandomEventButton() {
   const [setBonusEvent, bonusEvent] = useStore(
-    useShallow((state) => [state.setBonusEvent, state.bonusEvent])
+    useShallow((state) => [state.setBonusEvent, state.bonusEvent]),
   );
   const [visible, setVisible] = useState(false);
   const [timeLeft, setTimeLeft] = useState<string>("");
@@ -42,14 +42,17 @@ export default function RandomEventButton() {
   return (
     <>
       {visible && !bonusEvent && (
-        <button className="btn py-6 mt-2 btn-primary" onClick={handleClick}>
-          Bonus generation event!
+        <button className="btn py-8 btn-primary" onClick={handleClick}>
+          Bonus event!
         </button>
       )}
       {bonusEvent && (
-        <p className="text-lg text-center my-2">
-          Event multiplier! x{bonusEvent.multiplier.toFixed(1)} {timeLeft}
-        </p>
+        <div className="flex flex-col gap-1 px-2">
+          <p className="text-2xl font-extrabold text-primary text-center">
+            x{bonusEvent.multiplier.toFixed(1)}
+          </p>
+          <p className="text-lg text-center">{timeLeft}</p>
+        </div>
       )}
     </>
   );

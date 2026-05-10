@@ -1,13 +1,20 @@
+import { Star } from "lucide-react";
+import { memo, useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { GEN_MAX_LEVEL, type Generator } from "../data/generators";
+import { GEN_MAX_UPGRADE, upgrades } from "../data/upgrades";
+import useStats from "../hooks/useStats";
 import { useStore } from "../store/store";
 import { cn, formatDuration, formatNumber, getGeneratorUpgradeCost } from "../util";
-import { memo, useMemo } from "react";
-import useStats from "../hooks/useStats";
-import { GEN_MAX_UPGRADE, levelThresholds, upgrades } from "../data/upgrades";
 import UpgradeListItem from "./UpgradeListItem";
 
-export default function GeneratorListItem({ name, definition }: { name: string; definition: Generator }) {
+export default function GeneratorListItem({
+  name,
+  definition,
+}: {
+  name: string;
+  definition: Generator;
+}) {
   const [
     count,
     countTotal,
@@ -27,16 +34,19 @@ export default function GeneratorListItem({ name, definition }: { name: string; 
       state.ascendGenerator,
       state.generators,
       state.buyCount,
-    ])
+    ]),
   );
   const { getGeneratorVps } = useStats();
 
   // Static ?
   const generator = useMemo(() => myGenerators.find((x) => x.name === name), [myGenerators, name]);
   const genUpgrades = useMemo(() => upgrades.filter((x) => x.parameter === name), [name]);
+
+  //if (name == "Cosmic Forge") console.log(genUpgrades);
+
   const baseVps = useMemo(
     () => getGeneratorVps(name, 1, generator?.ascension ?? 0),
-    [generator?.ascension, name, getGeneratorVps]
+    [generator?.ascension, name, getGeneratorVps],
   );
   const currentLevel = generator?.level ?? 0;
   const upgradeCostOne = useMemo(
@@ -45,14 +55,14 @@ export default function GeneratorListItem({ name, definition }: { name: string; 
         definition.initialCost,
         definition.multiplier,
         currentLevel,
-        generator?.ascension ?? 0
+        generator?.ascension ?? 0,
       ),
-    [currentLevel, definition.initialCost, definition.multiplier, generator?.ascension]
+    [currentLevel, definition.initialCost, definition.multiplier, generator?.ascension],
   );
 
   const upgradeCount = useMemo(
     () => genUpgrades.filter((x) => myUpgrades.includes(x.name)).length,
-    [genUpgrades, myUpgrades]
+    [genUpgrades, myUpgrades],
   );
 
   const isMaxUpgrade = GEN_MAX_UPGRADE === upgradeCount;
@@ -73,7 +83,7 @@ export default function GeneratorListItem({ name, definition }: { name: string; 
         definition.initialCost,
         definition.multiplier,
         currentLevel + i,
-        ascension
+        ascension,
       );
       if (buyMax && totalCost + cost > count && i > 0) break; // Don't exceed count
       totalCost += cost;
@@ -95,48 +105,54 @@ export default function GeneratorListItem({ name, definition }: { name: string; 
 
   if (countTotal < definition.initialCost * 0.01) return null;
 
+  const ascension = generator?.ascension ?? 0;
+
   return (
     <>
       <li
         className={cn(
-          "list-row flex items-center select-none gap-2",
+          "list-row flex flex-col select-none gap-2",
           buyEnabled ? "cursor-pointer hover:bg-base-200" : "cursor-not-allowed opacity-50",
-          countTotal < definition.initialCost * 0.1 ? "blur-[2px] opacity-25 backdrop-brightness-50" : null
+          countTotal < definition.initialCost * 0.1
+            ? "blur-[2px] opacity-25 backdrop-brightness-50"
+            : null,
         )}
         onClick={buyEnabled ? handleClick : undefined}
       >
-        <div className="flex-1">
-          <Title name={name} upgradeCount={upgradeCount} ascension={generator?.ascension ?? 0} />
-          {ascensionReady ? (
-            <p className="text-sm opacity-75">
-              Ascend! {formatNumber(upgradeCostOne)}{" "}
-              <TimeUntilBuy count={count} upgradeCost={upgradeCost} currentVps={currentVps} />
-            </p>
-          ) : (
-            <p className="text-xs opacity-75">
-              <Details
-                upgradeCost={upgradeCost}
-                baseVps={baseVps}
-                buyCount={buyCount}
-                buyCountSelection={buyCountSelection}
-              />
-              <TimeUntilBuy count={count} upgradeCost={upgradeCost} currentVps={currentVps} />
-            </p>
+        <div className="flex-1 flex items-center gap-2">
+          {ascension > 0 && (
+            <div className="flex items-center">
+              <span className="text-primary text-xl font-bold mr-1">{ascension}</span>
+              <Star size={12} className="text-primary" />
+            </div>
           )}
+          <div className="flex-1">
+            <Title name={name} upgradeCount={upgradeCount} ascension={ascension} />
+            {ascensionReady ? (
+              <p className="text-sm text-primary font-semibold opacity-75">
+                Ascend! {formatNumber(upgradeCostOne)}
+              </p>
+            ) : (
+              <p className="text-xs opacity-75">
+                <Details
+                  upgradeCost={upgradeCost}
+                  baseVps={baseVps}
+                  buyCount={buyCount}
+                  buyCountSelection={buyCountSelection}
+                />
+                <TimeUntilBuy count={count} upgradeCost={upgradeCost} currentVps={currentVps} />
+              </p>
+            )}
+          </div>
+          <Right
+            currentVps={currentVps}
+            level={generator?.level ?? null}
+            ascension={generator?.ascension ?? 0}
+            definition={definition}
+          />
         </div>
-        <Right
-          currentVps={currentVps}
-          level={generator?.level ?? null}
-          ascension={generator?.ascension ?? 0}
-          definition={definition}
-        />
+        <PendingUpgrade myUpgrades={myUpgrades} genUpgrades={genUpgrades} />
       </li>
-      <PendingUpgrade
-        level={generator?.level ?? 1}
-        upgradeCount={upgradeCount}
-        myUpgrades={myUpgrades}
-        genUpgrades={genUpgrades}
-      />
     </>
   );
 }
@@ -152,8 +168,10 @@ const Title = memo(function ({
 }) {
   return (
     <p>
-      {name} {upgradeCount > 0 && <span>(lvl {upgradeCount})</span>}{" "}
-      {ascension > 0 && <span className="text-secondary">*{ascension}*</span>}
+      {ascension < 1 && upgradeCount > 0 && (
+        <span className="text-secondary">lvl {upgradeCount}</span>
+      )}{" "}
+      {name}
     </p>
   );
 });
@@ -174,8 +192,9 @@ const Details = memo(function ({
         <span className="text-primary">+{buyCount}</span> ={" "}
       </span>
       {formatNumber(upgradeCost, 1)} <span className="text-primary-content">|</span>{" "}
-      {/* {formatNumber(baseVps * buyCount, 1)}/s <span className="text-primary-content">|</span>{" "} */}
-      <span className="text-secondary">{formatDuration(upgradeCost / (baseVps * buyCount))} PP</span>
+      <span className="text-secondary">
+        {formatDuration(upgradeCost / (baseVps * buyCount))} PP
+      </span>
     </>
   );
 });
@@ -195,7 +214,7 @@ const Right = memo(function ({
 
   const vps = useMemo(
     () => getGeneratorVps(definition.name, level ?? 0, ascension),
-    [getGeneratorVps, definition.name, level, ascension]
+    [getGeneratorVps, definition.name, level, ascension],
   );
 
   if (level === null) return null;
@@ -232,24 +251,25 @@ const TimeUntilBuy = function ({
 };
 
 const PendingUpgrade = memo(function ({
-  level,
-  upgradeCount,
   myUpgrades,
   genUpgrades,
 }: {
-  level: number;
-  upgradeCount: number;
   myUpgrades: string[];
   genUpgrades: { name: string }[];
 }) {
-  const maxLevel = levelThresholds.reduce((acc, threshold, idx) => (level >= threshold ? idx + 1 : acc), 0);
+  // const maxLevel = levelThresholds.reduce(
+  //   (acc, threshold, idx) => (level >= threshold ? idx + 1 : acc),
+  //   0,
+  // );
 
   const pendingUpgrade = (() => {
-    if (maxLevel <= upgradeCount) return null;
+    // if (maxLevel <= upgradeCount) return null;
     for (const upgrade of genUpgrades) {
       if (!myUpgrades.includes(upgrade.name)) return upgrade;
     }
   })();
 
-  return pendingUpgrade ? <UpgradeListItem name={pendingUpgrade?.name} icon /> : null;
+  return pendingUpgrade ? (
+    <UpgradeListItem name={pendingUpgrade?.name} forceShow icon compact />
+  ) : null;
 });

@@ -1,35 +1,36 @@
 import clsx, { type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { levelThresholds } from "./data/upgrades";
 import { GEN_MAX_LEVEL, type Generator } from "./data/generators";
+import { levelThresholds } from "./data/upgrades";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatNumber(num: number, places: number = 3): string {
-  const tiers = [
-    { value: 1e63, suffix: "Vg" }, // Vigintillion
-    { value: 1e60, suffix: "NvD" }, // Novemdecillion
-    { value: 1e57, suffix: "OcD" }, // Octodecillion
-    { value: 1e54, suffix: "SpD" }, // Septendecillion
-    { value: 1e51, suffix: "SxD" }, // Sexdecillion
-    { value: 1e48, suffix: "QiD" }, // Quindecillion
-    { value: 1e45, suffix: "QuD" }, // Quattuordecillion
-    { value: 1e42, suffix: "TrD" }, // Tredecillion
-    { value: 1e39, suffix: "DdD" }, // Duodecillion
-    { value: 1e36, suffix: "UdD" }, // Undecillion
-    { value: 1e33, suffix: "Dc" }, // Decillion
-    { value: 1e30, suffix: "No" }, // Nonillion
-    { value: 1e27, suffix: "Oc" }, // Octillion
-    { value: 1e24, suffix: "Sp" }, // Septillion
-    { value: 1e21, suffix: "Sx" }, // Sextillion
-    { value: 1e18, suffix: "Qi" }, // Quintillion
-    { value: 1e15, suffix: "Qa" }, // Quadrillion
-    { value: 1e12, suffix: "T" }, // Trillion
-    { value: 1e9, suffix: "B" }, // Billion
-    { value: 1e6, suffix: "M" }, // Million
-  ];
+const tiers = [
+  { value: 1e63, suffix: "Vg" }, // Vigintillion
+  { value: 1e60, suffix: "NvD" }, // Novemdecillion
+  { value: 1e57, suffix: "OcD" }, // Octodecillion
+  { value: 1e54, suffix: "SpD" }, // Septendecillion
+  { value: 1e51, suffix: "SxD" }, // Sexdecillion
+  { value: 1e48, suffix: "QiD" }, // Quindecillion
+  { value: 1e45, suffix: "QuD" }, // Quattuordecillion
+  { value: 1e42, suffix: "TrD" }, // Tredecillion
+  { value: 1e39, suffix: "DdD" }, // Duodecillion
+  { value: 1e36, suffix: "UdD" }, // Undecillion
+  { value: 1e33, suffix: "Dc" }, // Decillion
+  { value: 1e30, suffix: "No" }, // Nonillion
+  { value: 1e27, suffix: "Oc" }, // Octillion
+  { value: 1e24, suffix: "Sp" }, // Septillion
+  { value: 1e21, suffix: "Sx" }, // Sextillion
+  { value: 1e18, suffix: "Qi" }, // Quintillion
+  { value: 1e15, suffix: "Qa" }, // Quadrillion
+  { value: 1e12, suffix: "T" }, // Trillion
+  { value: 1e9, suffix: "B" }, // Billion
+  { value: 1e6, suffix: "M" }, // Million
+];
+
+export function formatNumber(num: number, places: number = 2): string {
   for (const tier of tiers) {
     if (num >= tier.value) {
       return (num / tier.value).toFixed(places) + tier.suffix;
@@ -40,17 +41,33 @@ export function formatNumber(num: number, places: number = 3): string {
   }
   return num?.toFixed(1) ?? "0";
 }
+export function formatNumberSplit(num: number, places: number = 2) {
+  for (const tier of tiers) {
+    if (num >= tier.value) {
+      return (
+        <span>
+          {(num / tier.value).toFixed(places)}
+          <span className="text-secondary text-4xl">{tier.suffix}</span>
+        </span>
+      );
+    }
+  }
+  if (num >= 1e3) {
+    return <span>{Number(num.toFixed(0)).toLocaleString()}</span>;
+  }
+  return <span>{num?.toFixed(1) ?? "0"}</span>;
+}
 
 export function getGeneratorUpgradeCost(
   baseCost: number,
   costMultiplier: number,
   level: number,
-  ascension: number
+  ascension: number,
 ): number {
   const actualLevel = level + ascension * GEN_MAX_LEVEL;
   const maxIndex = levelThresholds.reduce(
     (acc, threshold, idx) => (actualLevel >= threshold ? idx + 1 : acc),
-    0
+    0,
   );
   const levelMult = Math.max(1, Math.pow(2, maxIndex));
   const ascensionMult = level === GEN_MAX_LEVEL ? Math.max(1, ascension * 1e5) : 1;
@@ -70,7 +87,7 @@ export function getGeneratorUpgradeCostBulk(
   costMultiplier: number,
   currentLevel: number,
   targetLevel: number,
-  ascension: number
+  ascension: number,
 ): number {
   let totalCost = 0;
   for (let i = currentLevel; i < targetLevel; i++) {
@@ -108,7 +125,15 @@ export function getPrestigeMultiplier(prestigePoints: number) {
   return 1 + prestigePoints * 0.01;
 }
 
-export function getGeneratorBaseVps(defintion: Generator, level: number, ascension: number): number {
+export function getGeneratorBaseVps(
+  defintion: Generator,
+  level: number,
+  ascension: number,
+): number {
   //return defintion.valuePerSecond * level * Math.max(1, Math.pow(10, ascension) * 1e5);
-  return defintion.valuePerSecond * level * Math.max(1, ascension * Math.pow(1e5, Math.max(1, ascension)));
+  return (
+    defintion.valuePerSecond *
+    level *
+    Math.max(1, ascension * Math.pow(1e5, Math.max(1, ascension)))
+  );
 }
