@@ -112,14 +112,18 @@ export default function GeneratorListItem({
       <li
         className={cn(
           "list-row flex flex-col select-none gap-2",
-          buyEnabled ? "cursor-pointer hover:bg-base-200" : "cursor-not-allowed opacity-50",
           countTotal < definition.initialCost * 0.1
             ? "blur-[2px] opacity-25 backdrop-brightness-50"
             : null,
         )}
         onClick={buyEnabled ? handleClick : undefined}
       >
-        <div className="flex-1 flex items-center gap-2">
+        <div
+          className={cn(
+            "flex-1 flex items-center gap-2",
+            buyEnabled ? "cursor-pointer hover:bg-base-200" : "cursor-not-allowed opacity-50",
+          )}
+        >
           {ascension > 0 && (
             <div className="flex items-center">
               <span className="text-primary text-xl font-bold mr-1">{ascension}</span>
