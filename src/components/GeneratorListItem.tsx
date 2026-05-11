@@ -68,28 +68,53 @@ export default function GeneratorListItem({
   const isMaxUpgrade = GEN_MAX_UPGRADE === upgradeCount;
   const ascensionReady = currentLevel >= GEN_MAX_LEVEL && isMaxUpgrade;
 
-  const { totalCost: upgradeCost, buyCount } = (() => {
+  const {
+    totalCost: upgradeCost,
+    buyCount,
+    buyCountMax,
+  } = (() => {
     let totalCost = 0;
-    let i = 0;
+    let totalCostMax = 0;
+    let buyCount = 0;
+    let buyCountMax = 0;
     const ascension = generator?.ascension ?? 0;
     const buyMax = buyCountSelection === -1;
-    const maxBuyCount = buyMax ? (ascensionReady ? 1 : GEN_MAX_LEVEL) : buyCountSelection;
-    while (
-      (!buyMax || totalCost < count) &&
-      i < maxBuyCount &&
-      (ascensionReady || currentLevel + i < GEN_MAX_LEVEL)
-    ) {
+    const maxBuyCount = ascensionReady ? 1 : GEN_MAX_LEVEL;
+    for (let i = 0; i < maxBuyCount; i++) {
       const cost = getGeneratorUpgradeCost(
         definition.initialCost,
         definition.multiplier,
-        currentLevel + i,
+        currentLevel + buyCount,
         ascension,
       );
-      if (buyMax && totalCost + cost > count && i > 0) break; // Don't exceed count
-      totalCost += cost;
-      i++;
+
+      const hitCap = currentLevel + i >= GEN_MAX_LEVEL;
+      if (hitCap) break;
+
+      if (buyMax) {
+        const wouldExceedCost = totalCost + cost > count;
+        if (!wouldExceedCost) {
+          totalCost += cost;
+          buyCount++;
+        }
+      } else {
+        const wouldExceedCost = totalCostMax + cost > count;
+        if (!wouldExceedCost) {
+          totalCostMax += cost;
+          buyCountMax++;
+        }
+
+        const hitSelectionTarget = buyCount >= buyCountSelection;
+        if (!hitSelectionTarget) {
+          totalCost += cost;
+          buyCount++;
+        }
+      }
+
+      // If this purchase wouldn't exceed the cost, then increment the max available
     }
-    return { totalCost, buyCount: i };
+
+    return { totalCost, buyCount, buyCountMax };
   })();
 
   const buyEnabled = buyCount >= 1 && count >= upgradeCost; // && currentLevel + buyCount <= GEN_MAX_LEVEL;
@@ -142,6 +167,7 @@ export default function GeneratorListItem({
                   upgradeCost={upgradeCost}
                   baseVps={baseVps}
                   buyCount={buyCount}
+                  buyCountMax={buyCountMax}
                   buyCountSelection={buyCountSelection}
                 />
                 <TimeUntilBuy count={count} upgradeCost={upgradeCost} currentVps={currentVps} />
@@ -184,16 +210,23 @@ const Details = memo(function ({
   upgradeCost,
   baseVps,
   buyCount,
+  buyCountMax,
+  buyCountSelection,
 }: {
   upgradeCost: number;
   baseVps: number;
   buyCount: number;
+  buyCountMax: number;
   buyCountSelection: number;
 }) {
   return (
     <>
       <span>
-        <span className="text-primary">+{buyCount}</span> ={" "}
+        <span className="text-primary">
+          +{buyCount}
+          {buyCountSelection !== -1 && <>/{buyCountMax}</>}
+        </span>{" "}
+        ={" "}
       </span>
       {formatNumber(upgradeCost, 1)} <span className="text-primary-content">|</span>{" "}
       <span className="text-secondary">

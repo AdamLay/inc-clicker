@@ -116,14 +116,15 @@ export default function UpgradeListItem({
       <div className="text-primary">{icon && <ArrowUp />}</div>
       <div className={cn("flex-1", compact ? "flex justify-between" : "")}>
         {compact ? (
-          <span className="text-xs">{helperText}</span>
+          <span className="text-xs ml-1">{helperText}</span>
         ) : (
           <p>
             {name} - <span className="text-xs">{helperText}</span>
           </p>
         )}
-        <div className="text-xs font-semibold opacity-60">
-          {formatNumber(definition.cost)} - {formatDuration(pp)} PP
+        <div className="text-xs font-semibold opacity-80">
+          {formatNumber(definition.cost)} -{" "}
+          <span className="text-secondary">{formatDuration(pp)} PP</span>
           {secondsUntilBuy > 0 && <> - {formatDuration(secondsUntilBuy)}</>}
         </div>
       </div>
