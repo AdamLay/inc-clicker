@@ -88,9 +88,6 @@ export default function GeneratorListItem({
         ascension,
       );
 
-      const hitCap = currentLevel + i >= GEN_MAX_LEVEL;
-      if (hitCap) break;
-
       if (buyMax) {
         const wouldExceedCost = totalCost + cost > count;
         if (!wouldExceedCost) {
@@ -111,7 +108,8 @@ export default function GeneratorListItem({
         }
       }
 
-      // If this purchase wouldn't exceed the cost, then increment the max available
+      const hitCap = currentLevel + i >= GEN_MAX_LEVEL;
+      if (hitCap) break;
     }
 
     return { totalCost, buyCount, buyCountMax };
@@ -140,6 +138,7 @@ export default function GeneratorListItem({
           countTotal < definition.initialCost * 0.1
             ? "blur-[2px] opacity-25 backdrop-brightness-50"
             : null,
+          ascensionReady && buyEnabled ? "bg-base-200" : "",
         )}
         onClick={buyEnabled ? handleClick : undefined}
       >
