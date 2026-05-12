@@ -2,7 +2,7 @@ import { Star } from "lucide-react";
 import { memo, useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { GEN_MAX_LEVEL, type Generator } from "../data/generators";
-import { GEN_MAX_UPGRADE, upgrades } from "../data/upgrades";
+import { GEN_MAX_UPGRADE, levelThresholds, upgrades } from "../data/upgrades";
 import useStats from "../hooks/useStats";
 import { useStore } from "../store/store";
 import { cn, formatDuration, formatNumber, getGeneratorUpgradeCost } from "../util";
@@ -177,7 +177,12 @@ export default function GeneratorListItem({
             definition={definition}
           />
         </div>
-        <PendingUpgrade myUpgrades={myUpgrades} genUpgrades={genUpgrades} />
+        <PendingUpgrade
+          myUpgrades={myUpgrades}
+          genUpgrades={genUpgrades}
+          level={currentLevel}
+          upgradeCount={upgradeCount}
+        />
       </li>
     </>
   );
@@ -286,23 +291,29 @@ const TimeUntilBuy = function ({
 const PendingUpgrade = memo(function ({
   myUpgrades,
   genUpgrades,
+  level,
+  upgradeCount,
 }: {
   myUpgrades: string[];
   genUpgrades: { name: string }[];
+  level: number;
+  upgradeCount: number;
 }) {
-  // const maxLevel = levelThresholds.reduce(
-  //   (acc, threshold, idx) => (level >= threshold ? idx + 1 : acc),
-  //   0,
-  // );
+  const maxLevel = levelThresholds.reduce(
+    (acc, threshold, idx) => (level >= threshold ? idx + 1 : acc),
+    0,
+  );
 
   const pendingUpgrade = (() => {
-    // if (maxLevel <= upgradeCount) return null;
+    //if (maxLevel <= upgradeCount) return null;
     for (const upgrade of genUpgrades) {
       if (!myUpgrades.includes(upgrade.name)) return upgrade;
     }
   })();
 
+  const disabled = maxLevel <= upgradeCount;
+
   return pendingUpgrade ? (
-    <UpgradeListItem name={pendingUpgrade?.name} forceShow icon compact />
+    <UpgradeListItem name={pendingUpgrade?.name} forceShow icon compact disabled={disabled} />
   ) : null;
 });

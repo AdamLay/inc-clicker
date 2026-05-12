@@ -11,11 +11,13 @@ export default function UpgradeListItem({
   icon,
   compact,
   forceShow,
+  disabled,
 }: {
   name: string;
   icon?: boolean;
   compact?: boolean;
   forceShow?: boolean;
+  disabled?: boolean;
 }) {
   const [count, countTotal, currentVps, addUpgrade, myUpgrades, generators, prestigePoints] =
     useStore(
@@ -39,7 +41,7 @@ export default function UpgradeListItem({
     [definition.parameter, definition.type, generators],
   );
   const bought = useMemo(() => myUpgrades.includes(name), [myUpgrades, name]);
-  const buyEnabled = !bought && count >= definition.cost;
+  const buyEnabled = !bought && count >= definition.cost && !disabled;
   const conditionSatisfied = !definition.condition || definition.condition(gen?.level);
   const show = forceShow || (countTotal >= definition.cost * 0.1 && conditionSatisfied);
 
