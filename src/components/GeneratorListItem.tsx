@@ -73,14 +73,12 @@ export default function GeneratorListItem({
     buyCount,
     buyCountMax,
   } = (() => {
-    let totalCost = 0;
-    let totalCostMax = 0;
-    let buyCount = 0;
-    let buyCountMax = 0;
     const ascension = generator?.ascension ?? 0;
-    const buyMax = buyCountSelection === -1;
-    const maxBuyCount = ascensionReady ? 1 : GEN_MAX_LEVEL;
-    for (let i = 0; i < maxBuyCount; i++) {
+    const maxBuyCount = ascensionReady ? 1 : GEN_MAX_LEVEL - currentLevel;
+
+    let totalCost = 0;
+    let buyCount = 0;
+    for (let i = 0; i < buyCountSelection; i++) {
       const cost = getGeneratorUpgradeCost(
         definition.initialCost,
         definition.multiplier,
@@ -88,31 +86,30 @@ export default function GeneratorListItem({
         ascension,
       );
 
-      if (buyMax) {
-        const wouldExceedCost = totalCost + cost > count;
-        if (!wouldExceedCost) {
-          totalCost += cost;
-          buyCount++;
-        }
-      } else {
-        const wouldExceedCost = totalCostMax + cost > count;
-        if (!wouldExceedCost) {
-          totalCostMax += cost;
-          buyCountMax++;
-        }
-
-        const hitSelectionTarget = buyCount >= buyCountSelection;
-        if (!hitSelectionTarget) {
-          totalCost += cost;
-          buyCount++;
-        }
-      }
-
-      const hitCap = currentLevel + i >= GEN_MAX_LEVEL;
-      if (hitCap) break;
+      totalCost += cost;
+      buyCount++;
     }
 
-    return { totalCost, buyCount, buyCountMax };
+    let totalCostMax = 0;
+    let buyCountMax = 0;
+    for (let i = 0; i < maxBuyCount; i++) {
+      const cost = getGeneratorUpgradeCost(
+        definition.initialCost,
+        definition.multiplier,
+        currentLevel + buyCountMax,
+        ascension,
+      );
+
+      const wouldExceedCost = totalCostMax + cost > count;
+      if (!wouldExceedCost) {
+        totalCostMax += cost;
+        buyCountMax++;
+      }
+    }
+
+    return buyCountSelection === -1
+      ? { totalCost: totalCostMax, buyCount: buyCountMax, buyCountMax }
+      : { totalCost, buyCount, buyCountMax };
   })();
 
   const buyEnabled = buyCount >= 1 && count >= upgradeCost; // && currentLevel + buyCount <= GEN_MAX_LEVEL;
