@@ -108,8 +108,17 @@ export default function GeneratorListItem({
       }
     }
 
+    const roundBuyCount = (buyCount: number) => {
+      for (const threshold of [25, 10, 5]) {
+        if (buyCount >= threshold) {
+          return buyCount - (buyCount % threshold);
+        }
+      }
+      return buyCount;
+    };
+
     return buyCountSelection === -1
-      ? { totalCost: totalCostMax, buyCount: buyCountMax, buyCountMax }
+      ? { totalCost: totalCostMax, buyCount: roundBuyCount(buyCountMax), buyCountMax }
       : { totalCost, buyCount, buyCountMax };
   })();
 
@@ -165,7 +174,6 @@ export default function GeneratorListItem({
                   baseVps={baseVps}
                   buyCount={buyCount}
                   buyCountMax={buyCountMax}
-                  buyCountSelection={buyCountSelection}
                 />
                 <TimeUntilBuy count={count} upgradeCost={upgradeCost} currentVps={currentVps} />
               </p>
@@ -213,20 +221,17 @@ const Details = memo(function ({
   baseVps,
   buyCount,
   buyCountMax,
-  buyCountSelection,
 }: {
   upgradeCost: number;
   baseVps: number;
   buyCount: number;
   buyCountMax: number;
-  buyCountSelection: number;
 }) {
   return (
     <>
       <span>
         <span className="text-primary">
-          +{buyCount}
-          {buyCountSelection !== -1 && <>/{buyCountMax}</>}
+          +{buyCount}/{buyCountMax}
         </span>{" "}
         ={" "}
       </span>
